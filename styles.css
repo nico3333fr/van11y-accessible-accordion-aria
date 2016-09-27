@@ -1,0 +1,252 @@
+html { 
+  font-size: 62.5%;
+  /* IE9-IE11 math fixing. See https://connect.microsoft.com/IE/feedback/details/816709/ */
+  /* Thanks to @guardian, @victorbritopro, @eQRoeil & Knacss */
+  font-size: calc(1em * 0.625);
+  box-sizing: border-box; 
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+body {
+  background: #fff;
+  color: #444;
+  font-family: 'roboto', Arial, sans-serif;
+  font-size: 1.8em; /* equiv 18px */
+  line-height: 1.5; /* to update if needed */
+}
+
+
+@font-face {
+    /*font-family: 'robotoregular';*/
+    font-family: 'roboto';
+    src: url('https://van11y.net/layout/css/fonts/Roboto-Regular-webfont.eot');
+    src: url('https://van11y.net/layout/css/fonts/Roboto-Regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('https://van11y.net/layout/css/fonts/Roboto-Regular-webfont.woff2') format('woff2'),
+         url('https://van11y.net/layout/css/fonts/Roboto-Regular-webfont.woff') format('woff'),
+         url('https://van11y.net/layout/css/fonts/Roboto-Regular-webfont.ttf') format('truetype'),
+         url('https://van11y.net/layout/css/fonts/Roboto-Regular-webfont.svg#robotoregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    /*font-family: 'robotobold';*/
+    font-family: 'roboto';
+    src: url('https://van11y.net/layout/css/fonts/Roboto-Bold-webfont.eot');
+    src: url('https://van11y.net/layout/css/fonts/Roboto-Bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('https://van11y.net/layout/css/fonts/Roboto-Bold-webfont.woff2') format('woff2'),
+         url('https://van11y.net/layout/css/fonts/Roboto-Bold-webfont.woff') format('woff'),
+         url('https://van11y.net/layout/css/fonts/Roboto-Bold-webfont.ttf') format('truetype'),
+         url('https://van11y.net/layout/css/fonts/Roboto-Bold-webfont.svg#robotobold') format('svg');
+    font-weight: bold;
+    font-style: normal;
+
+}
+
+@font-face {
+    /*font-family: 'robotoitalic';*/
+    font-family: 'roboto';
+    src: url('https://van11y.net/layout/css/fonts/Roboto-Italic-webfont.eot');
+    src: url('https://van11y.net/layout/css/fonts/Roboto-Italic-webfont.eot?#iefix') format('embedded-opentype'),
+         url('https://van11y.net/layout/css/fonts/Roboto-Italic-webfont.woff2') format('woff2'),
+         url('https://van11y.net/layout/css/fonts/Roboto-Italic-webfont.woff') format('woff'),
+         url('https://van11y.net/layout/css/fonts/Roboto-Italic-webfont.ttf') format('truetype'),
+         url('https://van11y.net/layout/css/fonts/Roboto-Italic-webfont.svg#robotoitalic') format('svg');
+    font-weight: normal;
+    font-style: italic;
+
+}
+
+.mw960e {
+  max-width: 60em;
+  margin: 0 auto;
+}
+.aligncenter {
+  text-align: center;
+}
+h1,
+.h1 {
+  display: block;
+  font-size: 1.55556em; /* equiv 28px */
+  line-height: 1.92857;
+  margin: 0 0 .96429em 0;
+  font-weight: normal;
+}
+h2,
+.h2 {
+  display: block;
+  font-size: 1.33333em; /* equiv 24px */
+  line-height: 1.125;
+  margin: 0 0 1.125em 0;
+  font-weight: normal;
+}
+
+.link {
+  color: #4d287f;
+  cursor: pointer;
+  text-decoration: none;
+  border-bottom: 1px solid #4d287f;
+}
+/* remember focus */
+.link:focus,
+.link:hover,
+.link:active {
+  color: #4d287f;
+  border-bottom: 1px solid #4d287f;
+  outline: 2px dotted;
+}
+/* avoid border on images in links + fix border image IE */
+.link:link img,
+.link:visited img, 
+img {
+  border-style: none;
+}
+/* external links */
+.link[href^="http://"]:after,
+.link[href^="https://"]:after {
+  content:"\202f\2197";
+  speak: none;
+  border-bottom: 1px solid #fff;
+  
+}
+
+.logo-link,
+.logo-link:focus,
+.logo-link:hover,
+.logo-link:active,
+.link.noimg[href^="http://"]:after,
+.link.noimg[href^="https://"]:after {
+  border-bottom: 0;
+}
+
+.link.noimg[href^="http://"]:after,
+.link.noimg[href^="https://"]:after {
+  content: '';
+  speak: none;
+}
+
+
+.invisible {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
+
+
+/* --------------- styles for accordion -----------------------*/
+
+
+/* accordion */
+
+
+.minimalist-accordion__header,
+.minimalist-noanim-accordion__header {
+  display: block;
+  background: none;
+  border: 0;
+  /** fix typo inputs **/
+  font-family: inherit;
+
+  font-size:  2em;
+  line-height: 1.8462;
+  margin:  0;
+  padding: .25em 0;
+  text-align: left;
+  width: 100%;
+  font-weight: normal;
+  color: #148297;
+}
+
+
+
+.minimalist-accordion__header:focus,
+.minimalist-noanim-accordion__header:focus {
+  outline: 1px dotted;
+}
+.minimalist-accordion__header::before,
+.minimalist-noanim-accordion__header::before  {
+  content: '';
+  display: inline-block;
+  width: .75em;
+  height: .75em;
+  background-image: url(https://van11y.net/layout/images//icon-arrow-green.svg) ;
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  margin-right: .25em;
+}
+
+[aria-expanded="true"].minimalist-accordion__header::before,
+[aria-expanded="true"].minimalist-noanim-accordion__header::before {
+  transform: rotate(90deg);
+  transform-origin: 50% 50%;
+}
+
+.minimalist-accordion__header[aria-selected="true"]:after,
+.minimalist-noanim-accordion__header[aria-selected="true"]:after {
+  content: "";
+  position: relative;
+  border-bottom: .4em solid transparent;
+  border-top: .4em solid transparent;
+  margin-left: .5em;
+  top: .1em;
+  border-left: .7em solid ;
+  display: inline-block;
+  speak: none;
+}
+
+.minimalist-accordion__title,
+.minimalist-noanim-accordion__title {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
+
+.minimalist-accordion__panel {
+  display: block;
+  overflow: hidden;
+  opacity: 1;
+  -webkit-transition: visibility 0s ease, max-height 1s ease, opacity 1s ease ;
+  transition: visibility 0s ease, max-height 1s ease, opacity 1s ease ;
+  max-height: 100em;
+  /* magic number for max-height = enough height */
+  visibility: visible;
+  -webkit-transition-delay: 0s;
+  transition-delay: 0s;
+  margin: 0;
+  padding: 0;
+}
+/* This is the hidden state */
+[aria-hidden=true].minimalist-accordion__panel {
+  display: block;
+  max-height: 0;
+  opacity: 0;
+  visibility: hidden;
+  -webkit-transition-delay: 1s, 0s, 0s;
+  transition-delay: 1s, 0s, 0s;
+  margin: 0;
+  padding: 0;
+}
+
+
+.minimalist-noanim-accordion__panel {
+  display: block;
+}
+[aria-hidden=true].minimalist-noanim-accordion__panel {
+  display: none;
+}
+
+

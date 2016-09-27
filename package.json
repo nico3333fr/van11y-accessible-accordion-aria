@@ -1,0 +1,48 @@
+{
+  "title": "Van11y accessible accordion using ARIA",
+  "name": "van11y-accessible-accordion-aria",
+  "description": "ES2015 accessible accordion system, using ARIA",
+  "version": "1.0.0",
+  "keywords": [
+    "Accessibility",
+    "ARIA",
+    "accordion",
+    "a11y",
+    "ES6"
+  ],
+  "scripts": {
+    "build": "gulp",
+    "build:es5": "gulp es5"
+  },
+  "author": [
+    {
+      "name": "Nicolas Hoffmann",
+      "email": "dante3333@gmail.com",
+      "web": "https://www.nicolas-hoffmann.net/"
+    }
+  ],
+  "bugs": {
+    "url": "https://github.com/nico3333fr/van11y-accessible-accordion-aria/issues"
+  },
+  "repository": [
+    {
+      "type": "git",
+      "url": "https://github.com/nico3333fr/van11y-accessible-accordion-aria.git"
+    }
+  ],
+  "licenses": [
+    {
+      "name": "MIT",
+      "url": "https://github.com/nico3333fr/van11y-accessible-accordion-aria/blob/master/LICENSE"
+    }
+  ],
+  "homepage": "https://van11y.net/accessible-accordion/",
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-babel": "^5.3.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^1.4.2",
+	"gulp-header": "^1.7.1"
+  }
+  
+}

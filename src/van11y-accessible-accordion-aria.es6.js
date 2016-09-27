@@ -1,7 +1,7 @@
 /*
- * ES6/jQuery accessible accordion system, using ARIA
- * Website: http://a11y.nicolas-hoffmann.net/accordion/
- * License MIT: https://github.com/nico3333fr/jquery-accessible-hide-show-aria/blob/master/LICENSE
+ * ES2015 accessible accordion system, using ARIA
+ * Website: https://van11y.net/accessible-accordion/
+ * License MIT: https://github.com/nico3333fr/van11y-accessible-accordion-aria/blob/master/LICENSE
  */
 ;(doc => {
 

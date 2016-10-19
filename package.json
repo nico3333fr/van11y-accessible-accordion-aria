@@ -1,14 +1,16 @@
 {
   "title": "Van11y accessible accordion using ARIA",
   "name": "van11y-accessible-accordion-aria",
-  "description": "ES2015 accessible accordion system, using ARIA",
+  "description": "ES2015 accessible accordion system, using ARIA (compatible IE9+ when transpiled)",
   "version": "1.0.0",
   "keywords": [
     "Accessibility",
     "ARIA",
     "accordion",
     "a11y",
-    "ES6"
+    "ES6",
+    "ES2015",
+    "Vanilla Javascript Plugin"
   ],
   "scripts": {
     "build": "gulp",

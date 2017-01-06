@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
+<head>
+ <meta charset="utf-8" />
+ <title>Démo : système d’Accordéon Accessible utilisant ARIA - Van11y</title>
+ 
+<link href="./styles.css" rel="stylesheet" media="all" />
+
+
+
+<meta name="description" content="Ce script va transformer une simple liste d’Hx/contenus en un bel accordéon accessible, utilisant ARIA" />
+<meta name="keywords" content="collection, accessibilité, accordéon, scripts, projets, onglets, panneaux dépliants, info-bulle, customisable" />
+
+<meta property="og:type" content="website" />
+<!-- Open Graph Meta Data -->
+<meta property="og:title" content="Démo : système d’Accordéon Accessible utilisant ARIA - Van11y" />
+<meta property="og:description" content="Ce script va transformer une simple liste d’Hx/contenus en un bel accordéon accessible, utilisant ARIA" />
+<meta property="og:image" content="https://van11y.net/apple-touch-icon.png" />
+<meta property="og:url" content="https://van11y.net/fr/accordeon-accessible/" />
+
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:url" content="https://van11y.net/fr/accordeon-accessible/" />
+<meta name="twitter:title" content="Démo : système d’Accordéon Accessible utilisant ARIA - Van11y" />
+<meta name="twitter:description" content="Ce script va transformer une simple liste d’Hx/contenus en un bel accordéon accessible, utilisant ARIA" />
+<meta name="twitter:image" content="https://van11y.net/apple-touch-icon.png" />
+<meta name="twitter:site" content="Van11y" />
+<meta name="twitter:creator" content="Van11y" />
+
+<meta name="robots" content="index, follow" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+
+<link rel="apple-touch-icon" href="https://van11y.net/apple-touch-icon.png" />
+
+
+
+</head>
+<body role="document">
+
+<div id="page" class="mw960e" role="main">
+
+ <br>
+ <div class="aligncenter">
+ 	<a href="https://van11y.net/fr/" class="logo-link"><img src="https://van11y.net/layout/images/logo-van11y.svg" alt="Retour à la page d’accueil" width="267" height="90" class="logo" /></a>
+ </div>
+ <br>
+
+ <h1 class="aligncenter">Démo&#160;: accordéon accessible utilisant <abbr title="Accessible Rich Internet Applications" lang="en" xml:lang="en">ARIA</abbr> en Vanilla <abbr title="JavaScript" lang="en" xml:lang="en">JS</abbr></h1>
+
+  <div class="js-accordion" data-accordion-prefix-classes="minimalist">
+ 
+       <h2 class="js-accordion__header">Un accordéon animé avec sélection multiple…</h2>
+       <div class="js-accordion__panel">
+        
+        <p>Oui, trop cool.</p>
+       
+       </div>
+       
+       <h2 class="js-accordion__header">… pas ouvert par défaut</h2>
+       <div class="js-accordion__panel">
+        
+        <p>Oui, ça marche aussi.</p>
+       
+       </div>
+       
+   </div>
+   <br><hr /><br>
+  <div class="js-accordion" data-accordion-prefix-classes="minimalist-noanim" data-accordion-multiselectable="none">
+ 
+       <h2 class="js-accordion__header">Un autre accordéon non animé…</h2>
+       <div class="js-accordion__panel">
+        
+        <p>Oui, trop cool.</p>
+       
+       </div>
+       
+       
+       <h2 class="js-accordion__header" data-accordion-opened="true">… et sans multi-sélection</h2>
+       <div class="js-accordion__panel">
+        
+        <p>Oui, c’est cool quand même.</p>
+       
+       </div>
+       
+   </div>
+            
+  
+  
+<div class="footer" role="contentinfo"><br>Cette démo est un exemple d’<a href="https://van11y.net/fr/accordeon-accessible/" class="link">accordéon accessible du projet Van11y utilisant <abbr title="Accessible Rich Internet Applications" lang="en" xml:lang="en">ARIA</abbr></a>.<br></div>
+
+</div>
+<script src="../dist/van11y-accessible-accordion-aria.min.js"></script>
+</body>
+</html>

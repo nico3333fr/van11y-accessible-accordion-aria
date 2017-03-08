@@ -191,8 +191,9 @@
               'id' : ACCORDION_PREFIX_IDS + iLisible + ACCORDION_BUTTON_ID + indexHeaderLisible ,
               [ATTR_CONTROLS] : ACCORDION_PREFIX_IDS + iLisible + ACCORDION_PANEL_ID + indexHeaderLisible ,
               [ATTR_SELECTED] : 'false' ,
-              'tabindex' : '-1'
-             });
+              'tabindex' : '-1',
+              'type' : 'button'
+			  });
 
             // place button
             accordionButton = accordion_node.insertBefore(accordionButton, header_node);

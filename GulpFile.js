@@ -9,7 +9,7 @@ var banner = ['/**',
   ' * <%= pkg.name %> - <%= pkg.description %>',
   ' * @version v<%= pkg.version %>',
   ' * @link <%= pkg.homepage %>',
-  ' * @license ' + pkg.licenses[0].name + ' : ' + pkg.licenses[0].url + '',
+  ' * @license ' + pkg.license[0].name + ' : ' + pkg.license[0].url + '',
   ' */',
   ''].join('\n');
 	

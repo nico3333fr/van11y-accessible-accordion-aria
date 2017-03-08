@@ -181,7 +181,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         accordionButton.innerHTML = accordionHeaderText;
         addClass(accordionButton, ACCORDION_JS_HEADER);
         addClass(accordionButton, prefixClassName + ACCORDION_HEADER_STYLE);
-        setAttributes(accordionButton, (_setAttributes2 = {}, _defineProperty(_setAttributes2, ATTR_ROLE, ACCORDION_ROLE_TAB), _defineProperty(_setAttributes2, 'id', ACCORDION_PREFIX_IDS + iLisible + ACCORDION_BUTTON_ID + indexHeaderLisible), _defineProperty(_setAttributes2, ATTR_CONTROLS, ACCORDION_PREFIX_IDS + iLisible + ACCORDION_PANEL_ID + indexHeaderLisible), _defineProperty(_setAttributes2, ATTR_SELECTED, 'false'), _defineProperty(_setAttributes2, 'tabindex', '-1'), _setAttributes2));
+        setAttributes(accordionButton, (_setAttributes2 = {}, _defineProperty(_setAttributes2, ATTR_ROLE, ACCORDION_ROLE_TAB), _defineProperty(_setAttributes2, 'id', ACCORDION_PREFIX_IDS + iLisible + ACCORDION_BUTTON_ID + indexHeaderLisible), _defineProperty(_setAttributes2, ATTR_CONTROLS, ACCORDION_PREFIX_IDS + iLisible + ACCORDION_PANEL_ID + indexHeaderLisible), _defineProperty(_setAttributes2, ATTR_SELECTED, 'false'), _defineProperty(_setAttributes2, 'tabindex', '-1'), _defineProperty(_setAttributes2, 'type', 'button'), _setAttributes2));
 
         // place button
         accordionButton = accordion_node.insertBefore(accordionButton, header_node);

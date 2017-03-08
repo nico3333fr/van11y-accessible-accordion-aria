@@ -38,7 +38,7 @@ Into this:
  <button id="accordion1_tab1" 
      class="js-accordion__header your-prefix-class__header" 
      aria-controls="accordion1_panel1" aria-expanded="false" 
-     role="tab" aria-selected="true">
+     role="tab" aria-selected="true" type="button">
        First tab
  </button>
 

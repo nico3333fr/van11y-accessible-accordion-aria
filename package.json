@@ -3,7 +3,7 @@
   "name": "van11y-accessible-accordion-aria",
   "description": "ES2015 accessible accordion system, using ARIA (compatible IE9+ when transpiled)",
   "main": "dist/van11y-accessible-accordion-aria.min.js",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "keywords": [
     "Accessibility",
     "ARIA",

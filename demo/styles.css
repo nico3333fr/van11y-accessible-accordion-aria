@@ -154,7 +154,7 @@ img {
   border: 0;
   /** fix typo inputs **/
   font-family: inherit;
-
+  cursor: pointer;
   font-size:  2em;
   line-height: 1.8462;
   margin:  0;

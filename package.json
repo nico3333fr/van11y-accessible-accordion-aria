@@ -3,7 +3,7 @@
   "name": "van11y-accessible-accordion-aria",
   "description": "ES2015 accessible accordion system, using ARIA (compatible IE9+ when transpiled)",
   "main": "dist/van11y-accessible-accordion-aria.min.js",
-  "version": "1.0.6",
+  "version": "2.0.0",
   "keywords": [
     "Accessibility",
     "ARIA",
@@ -17,13 +17,7 @@
     "build": "gulp",
     "build:es5": "gulp es5"
   },
-  "author": [
-    {
-      "name": "Nicolas Hoffmann",
-      "email": "dante3333@gmail.com",
-      "web": "https://www.nicolas-hoffmann.net/"
-    }
-  ],
+  "author": "",
   "bugs": {
     "url": "https://github.com/nico3333fr/van11y-accessible-accordion-aria/issues"
   },
@@ -45,7 +39,31 @@
     "gulp-babel": "^5.3.0",
     "gulp-rename": "^1.2.2",
     "gulp-uglify": "^1.4.2",
-	"gulp-header": "^1.7.1"
-  }
-  
+    "gulp-header": "^1.7.1"
+  },
+  "_id": "van11y-accessible-accordion-aria@1.0.6",
+  "_shasum": "70d36b63418c992fd73cf3c16ab55d404a3f8adf",
+  "_from": "van11y-accessible-accordion-aria@*",
+  "_npmVersion": "3.5.3",
+  "_nodeVersion": "0.10.26",
+  "_npmUser": {
+    "name": "nico3333fr",
+    "email": "dante3333@gmail.com"
+  },
+  "dist": {
+    "shasum": "70d36b63418c992fd73cf3c16ab55d404a3f8adf",
+    "tarball": "https://registry.npmjs.org/van11y-accessible-accordion-aria/-/van11y-accessible-accordion-aria-1.0.6.tgz"
+  },
+  "maintainers": [
+    {
+      "name": "nico3333fr",
+      "email": "dante3333@gmail.com"
+    }
+  ],
+  "_npmOperationalInternal": {
+    "host": "s3://npm-registry-packages",
+    "tmp": "tmp/van11y-accessible-accordion-aria-1.0.6.tgz_1506498451895_0.9522592255380005"
+  },
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/van11y-accessible-accordion-aria/-/van11y-accessible-accordion-aria-1.0.6.tgz"
 }

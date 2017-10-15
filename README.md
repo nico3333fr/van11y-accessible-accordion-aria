@@ -57,6 +57,11 @@ Into this:
 
 The script will do the rest (all ids, ARIA attributes, buttons are generated on the fly).
 
+The script is launched when the page is loaded. If you need to execute it on AJAX-inserted content, you may use for example on ```<div id="newContent">your accordion source</div>```:
+
+```van11yAccessibleAccordionAria(document.getElementById('newContent'));```
+
+
 ## How to use it
 
 You may use npm command: ```npm i van11y-accessible-accordion-aria```.

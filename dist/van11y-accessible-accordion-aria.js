@@ -18,6 +18,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     var ACCORDION_DATA_PREFIX_CLASS = 'data-accordion-prefix-classes';
     var ACCORDION_DATA_OPENED = 'data-accordion-opened';
     var ACCORDION_DATA_MULTISELECTABLE = 'data-accordion-multiselectable';
+    var ACCORDION_DATA_COOL_SELECTORS = 'data-accordion-cool-selectors';
 
     var ACCORDION_PREFIX_IDS = 'accordion';
     var ACCORDION_BUTTON_ID = '_tab';
@@ -132,7 +133,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     /**
      * Find all accordions inside a container
      * @param  {Node} node Default document
-     * @return {Array}      
+     * @return {Array}
      */
     var $listAccordions = function $listAccordions() {
         var node = arguments.length <= 0 || arguments[0] === undefined ? doc : arguments[0];
@@ -141,13 +142,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
     /**
      * Build accordions for a container
-     * @param  {Node} node 
+     * @param  {Node} node
      */
     var attach = function attach(node) {
         $listAccordions(node).forEach(function (accordion_node) {
 
             var iLisible = Math.random().toString(32).slice(2, 12);
             var prefixClassName = accordion_node.hasAttribute(ACCORDION_DATA_PREFIX_CLASS) === true ? accordion_node.getAttribute(ACCORDION_DATA_PREFIX_CLASS) + '-' : '';
+            var coolSelectors = accordion_node.hasAttribute(ACCORDION_DATA_COOL_SELECTORS) === true ? true : false;
 
             // Init attributes accordion
             if (accordion_node.getAttribute(ACCORDION_DATA_MULTISELECTABLE) === 'none') {
@@ -162,6 +164,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             $listAccordionsHeader.forEach(function (header_node, index_header) {
                 var _setAttributes2, _setAttributes3;
 
+                // if we do not have cool selectors enabled,
+                // it is not a direct child, we ignore it
+                if (header_node.parentNode !== accordion_node && coolSelectors === false) {
+                    return;
+                }
+
                 var indexHeaderLisible = index_header + 1;
                 var accordionPanel = header_node.nextElementSibling;
                 var accordionHeaderText = header_node.innerHTML;
@@ -175,7 +183,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 setAttributes(accordionButton, (_setAttributes2 = {}, _defineProperty(_setAttributes2, ATTR_ROLE, ACCORDION_ROLE_TAB), _defineProperty(_setAttributes2, 'id', ACCORDION_PREFIX_IDS + iLisible + ACCORDION_BUTTON_ID + indexHeaderLisible), _defineProperty(_setAttributes2, ATTR_CONTROLS, ACCORDION_PREFIX_IDS + iLisible + ACCORDION_PANEL_ID + indexHeaderLisible), _defineProperty(_setAttributes2, ATTR_SELECTED, 'false'), _defineProperty(_setAttributes2, 'tabindex', '-1'), _defineProperty(_setAttributes2, 'type', 'button'), _setAttributes2));
 
                 // place button
-                accordionButton = accordion_node.insertBefore(accordionButton, header_node);
+                accordionButton = header_node.parentNode.insertBefore(accordionButton, header_node);
 
                 // move title into panel
                 accordionPanel.insertBefore(header_node, accordionPanel.firstChild);
@@ -212,13 +220,22 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
             // focus on button
             if (hasClass(e.target, ACCORDION_JS_HEADER) === true && eventName === 'focus') {
-                var buttonTag = e.target;
-                var accordionContainer = buttonTag.parentNode;
-                var $accordionAllHeaders = [].slice.call(accordionContainer.querySelectorAll('.' + ACCORDION_JS_HEADER));
+                (function () {
+                    var buttonTag = e.target;
+                    var accordionContainer = buttonTag.parentNode;
+                    var coolSelectors = accordionContainer.hasAttribute(ACCORDION_DATA_COOL_SELECTORS) === true ? true : false;
+                    var $accordionAllHeaders = [].slice.call(accordionContainer.querySelectorAll('.' + ACCORDION_JS_HEADER));
 
-                unSelectHeaders($accordionAllHeaders);
+                    if (coolSelectors === false) {
+                        $accordionAllHeaders = $accordionAllHeaders.filter(function (element) {
+                            return element.parentNode === accordionContainer;
+                        });
+                    }
 
-                selectHeader(buttonTag);
+                    unSelectHeaders($accordionAllHeaders);
+
+                    selectHeader(buttonTag);
+                })();
             }
 
             // click on button
@@ -226,10 +243,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 (function () {
                     var buttonTag = e.target;
                     var accordionContainer = buttonTag.parentNode;
+                    var coolSelectors = accordionContainer.hasAttribute(ACCORDION_DATA_COOL_SELECTORS) === true ? true : false;
                     var $accordionAllHeaders = [].slice.call(accordionContainer.querySelectorAll('.' + ACCORDION_JS_HEADER));
                     var accordionMultiSelectable = accordionContainer.getAttribute(ATTR_MULTISELECTABLE);
                     var destination = findById(buttonTag.getAttribute(ATTR_CONTROLS));
                     var stateButton = buttonTag.getAttribute(ATTR_EXPANDED);
+
+                    if (coolSelectors === false) {
+                        $accordionAllHeaders = $accordionAllHeaders.filter(function (element) {
+                            return element.parentNode === accordionContainer;
+                        });
+                    }
 
                     // if closed
                     if (stateButton === 'false') {
@@ -267,7 +291,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 (function () {
                     var buttonTag = e.target;
                     var accordionContainer = buttonTag.parentNode;
+                    var coolSelectors = accordionContainer.hasAttribute(ACCORDION_DATA_COOL_SELECTORS) === true ? true : false;
                     var $accordionAllHeaders = [].slice.call(accordionContainer.querySelectorAll('.' + ACCORDION_JS_HEADER));
+
+                    if (coolSelectors === false) {
+                        $accordionAllHeaders = $accordionAllHeaders.filter(function (element) {
+                            return element.parentNode === accordionContainer;
+                        });
+                    }
 
                     // strike home on a tab => 1st tab
                     if (e.keyCode === 36) {
@@ -330,8 +361,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
                     var panelTag = findById(id_panel);
                     var accordionContainer = panelTag.parentNode;
+                    var coolSelectors = accordionContainer.hasAttribute(ACCORDION_DATA_COOL_SELECTORS) === true ? true : false;
                     var $accordionAllHeaders = [].slice.call(accordionContainer.querySelectorAll('.' + ACCORDION_JS_HEADER));
                     var buttonTag = findById(panelTag.getAttribute(ATTR_LABELLEDBY));
+
+                    if (coolSelectors === false) {
+                        $accordionAllHeaders = $accordionAllHeaders.filter(function (element) {
+                            return element.parentNode === accordionContainer;
+                        });
+                    }
 
                     // strike up + ctrl => go to header
                     if (e.keyCode === 38 && e.ctrlKey) {

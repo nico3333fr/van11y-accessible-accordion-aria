@@ -31,20 +31,20 @@ Basically it will transform this:
 ```
 Into this:
 ```
-<div class="your-prefix-class" 
+<div class="your-prefix-class"
    data-accordion-prefix-classes="your-prefix-class"
    role="tablist" aria-multiselectable="true">
 
- <button id="accordion1_tab1" 
-     class="js-accordion__header your-prefix-class__header" 
-     aria-controls="accordion1_panel1" aria-expanded="false" 
+ <button id="accordion1_tab1"
+     class="js-accordion__header your-prefix-class__header"
+     aria-controls="accordion1_panel1" aria-expanded="false"
      role="tab" aria-selected="true" type="button">
        First tab
  </button>
 
- <div id="accordion1_panel1" 
-     class="js-accordion__panel your-prefix-class__panel" 
-     aria-labelledby="accordion1_tab1" 
+ <div id="accordion1_panel1"
+     class="js-accordion__panel your-prefix-class__panel"
+     aria-labelledby="accordion1_tab1"
      role="tabpanel" aria-hidden="true">
 
    <h2 class="your-prefix-class__title" tabindex="0">First tab</h2>
@@ -155,6 +155,10 @@ If you want to have an accordion content opened by default, just add the attribu
 </h2>
 ```
 And the script will open its content.
+
+__Nested accordions and cooler selectors__
+
+By default, the script supports nested accordions (since 2.1.0 version). To do this, the script is going to search for direct children of `js-accordion`. However, it is possible to activate a less strict mode if your site requires some `div` between `js-accordion` and `js-accordion__header`, this can be achieved using `data-accordion-cool-selectors="1"` attribute, to put onto `js-accordion` element. [The first demo illustrates this feature](https://van11y.net/downloads/accordion/demo/index.html).
 
 __Other options__
 

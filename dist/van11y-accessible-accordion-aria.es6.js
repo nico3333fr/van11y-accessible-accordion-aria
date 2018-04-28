@@ -14,6 +14,7 @@
     const ACCORDION_DATA_PREFIX_CLASS = 'data-accordion-prefix-classes';
     const ACCORDION_DATA_OPENED = 'data-accordion-opened';
     const ACCORDION_DATA_MULTISELECTABLE = 'data-accordion-multiselectable';
+    const ACCORDION_DATA_COOL_SELECTORS = 'data-accordion-cool-selectors';
 
     const ACCORDION_PREFIX_IDS = 'accordion';
     const ACCORDION_BUTTON_ID = '_tab';
@@ -137,13 +138,13 @@
     /**
      * Find all accordions inside a container
      * @param  {Node} node Default document
-     * @return {Array}      
+     * @return {Array}
      */
     const $listAccordions = (node = doc) => [].slice.call(node.querySelectorAll('.' + ACCORDION_JS));
 
     /**
      * Build accordions for a container
-     * @param  {Node} node 
+     * @param  {Node} node
      */
     const attach = (node) => {
         $listAccordions(node)
@@ -151,6 +152,7 @@
 
                 let iLisible = Math.random().toString(32).slice(2, 12);
                 let prefixClassName = accordion_node.hasAttribute(ACCORDION_DATA_PREFIX_CLASS) === true ? accordion_node.getAttribute(ACCORDION_DATA_PREFIX_CLASS) + '-' : '';
+                let coolSelectors = accordion_node.hasAttribute(ACCORDION_DATA_COOL_SELECTORS) === true ? true : false;
 
                 // Init attributes accordion
                 if (accordion_node.getAttribute(ACCORDION_DATA_MULTISELECTABLE) === 'none') {
@@ -164,6 +166,12 @@
                 let $listAccordionsHeader = [].slice.call(accordion_node.querySelectorAll('.' + ACCORDION_JS_HEADER));
                 $listAccordionsHeader
                     .forEach((header_node, index_header) => {
+
+                        // if we do not have cool selectors enabled,
+                        // it is not a direct child, we ignore it
+                        if (header_node.parentNode !== accordion_node && coolSelectors === false) {
+                            return;
+                        }
 
                         let indexHeaderLisible = index_header + 1;
                         let accordionPanel = header_node.nextElementSibling;
@@ -185,7 +193,7 @@
                         });
 
                         // place button
-                        accordionButton = accordion_node.insertBefore(accordionButton, header_node);
+                        accordionButton = header_node.parentNode.insertBefore(accordionButton, header_node);
 
                         // move title into panel
                         accordionPanel.insertBefore(header_node, accordionPanel.firstChild);
@@ -235,7 +243,12 @@
                 if (hasClass(e.target, ACCORDION_JS_HEADER) === true && eventName === 'focus') {
                     let buttonTag = e.target;
                     let accordionContainer = buttonTag.parentNode;
+                    let coolSelectors = accordionContainer.hasAttribute(ACCORDION_DATA_COOL_SELECTORS) === true ? true : false;
                     let $accordionAllHeaders = [].slice.call(accordionContainer.querySelectorAll('.' + ACCORDION_JS_HEADER));
+
+                    if (coolSelectors === false) {
+                        $accordionAllHeaders = $accordionAllHeaders.filter(element => element.parentNode === accordionContainer);
+                    }
 
                     unSelectHeaders($accordionAllHeaders);
 
@@ -247,10 +260,15 @@
                 if (hasClass(e.target, ACCORDION_JS_HEADER) === true && eventName === 'click') {
                     let buttonTag = e.target;
                     let accordionContainer = buttonTag.parentNode;
+                    let coolSelectors = accordionContainer.hasAttribute(ACCORDION_DATA_COOL_SELECTORS) === true ? true : false;
                     let $accordionAllHeaders = [].slice.call(accordionContainer.querySelectorAll('.' + ACCORDION_JS_HEADER));
                     let accordionMultiSelectable = accordionContainer.getAttribute(ATTR_MULTISELECTABLE);
                     let destination = findById(buttonTag.getAttribute(ATTR_CONTROLS));
                     let stateButton = buttonTag.getAttribute(ATTR_EXPANDED);
+
+                    if (coolSelectors === false) {
+                        $accordionAllHeaders = $accordionAllHeaders.filter(element => element.parentNode === accordionContainer);
+                    }
 
                     // if closed
                     if (stateButton === 'false') {
@@ -289,7 +307,12 @@
                 if (hasClass(e.target, ACCORDION_JS_HEADER) === true && eventName === 'keydown') {
                     let buttonTag = e.target;
                     let accordionContainer = buttonTag.parentNode;
+                    let coolSelectors = accordionContainer.hasAttribute(ACCORDION_DATA_COOL_SELECTORS) === true ? true : false;
                     let $accordionAllHeaders = [].slice.call(accordionContainer.querySelectorAll('.' + ACCORDION_JS_HEADER));
+
+                    if (coolSelectors === false) {
+                        $accordionAllHeaders = $accordionAllHeaders.filter(element => element.parentNode === accordionContainer);
+                    }
 
                     // strike home on a tab => 1st tab
                     if (e.keyCode === 36) {
@@ -353,8 +376,13 @@
 
                     let panelTag = findById(id_panel);
                     let accordionContainer = panelTag.parentNode;
+                    let coolSelectors = accordionContainer.hasAttribute(ACCORDION_DATA_COOL_SELECTORS) === true ? true : false;
                     let $accordionAllHeaders = [].slice.call(accordionContainer.querySelectorAll('.' + ACCORDION_JS_HEADER));
                     let buttonTag = findById(panelTag.getAttribute(ATTR_LABELLEDBY));
+
+                    if (coolSelectors === false) {
+                        $accordionAllHeaders = $accordionAllHeaders.filter(element => element.parentNode === accordionContainer);
+                    }
 
                     // strike up + ctrl => go to header
                     if (e.keyCode === 38 && e.ctrlKey) {
@@ -365,7 +393,7 @@
                         }, 0);
                         e.preventDefault();
                     }
-                    // strike pageup + ctrl => go to prev header 
+                    // strike pageup + ctrl => go to prev header
                     if (e.keyCode === 33 && e.ctrlKey) {
                         // go to header
                         unSelectHeaders($accordionAllHeaders);
@@ -384,7 +412,7 @@
                         }
 
                     }
-                    // strike pagedown + ctrl => go to next header 
+                    // strike pagedown + ctrl => go to next header
                     if (e.keyCode === 34 && e.ctrlKey) {
                         // go to header
                         unSelectHeaders($accordionAllHeaders);

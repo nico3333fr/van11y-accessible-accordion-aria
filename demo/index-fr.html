@@ -3,7 +3,7 @@
 <head>
  <meta charset="utf-8" />
  <title>Démo : système d’Accordéon Accessible utilisant ARIA - Van11y</title>
- 
+
 <link href="./styles.css" rel="stylesheet" media="all" />
 
 
@@ -47,45 +47,58 @@
 
  <h1 class="aligncenter">Démo&#160;: accordéon accessible utilisant <abbr title="Accessible Rich Internet Applications" lang="en" xml:lang="en">ARIA</abbr> en Vanilla <abbr title="JavaScript" lang="en" xml:lang="en">JS</abbr></h1>
 
-  <div class="js-accordion" data-accordion-prefix-classes="minimalist">
- 
-       <h2 class="js-accordion__header">Un accordéon animé avec sélection multiple…</h2>
-       <div class="js-accordion__panel">
-        
-        <p>Oui, trop cool.</p>
-       
-       </div>
-       
-       <h2 class="js-accordion__header">… pas ouvert par défaut</h2>
-       <div class="js-accordion__panel">
-        
-        <p><span tabindex="0">Oui, ça marche aussi (ce texte est focusable)</span>.</p>
-       
-       </div>
-       
+  <div class="js-accordion" data-accordion-prefix-classes="minimalist" data-accordion-cool-selectors="1">
+
+       <div> <!-- cette div n’est pas nécessaire, juste pour illustrer l’utilité de data-accordion-cool-selectors="1" -->
+           <h2 class="js-accordion__header">Un accordéon animé avec sélection multiple…</h2>
+            <div class="js-accordion__panel">
+
+                <p>Oui, trop cool.</p>
+
+            </div>
+
+            <h2 class="js-accordion__header">… pas ouvert par défaut</h2>
+            <div class="js-accordion__panel">
+
+                <p><span tabindex="0">Oui, ça marche aussi (ce texte est focusable)</span>.</p>
+
+            </div>
+        </div>
+
    </div>
    <br><hr /><br>
   <div class="js-accordion" data-accordion-prefix-classes="minimalist-noanim" data-accordion-multiselectable="none">
- 
+
        <h2 class="js-accordion__header">Un autre accordéon non animé…</h2>
        <div class="js-accordion__panel">
-        
+
         <p>Oui, trop cool.</p>
-       
+
        </div>
-       
-       
+
+
        <h2 class="js-accordion__header" data-accordion-opened="true">… et sans multi-sélection</h2>
        <div class="js-accordion__panel">
-        
+
         <p>Oui, c’est cool quand même.</p>
-       
+
+        <div class="js-accordion" data-accordion-prefix-classes="minimalist-css">
+           <h3 class="js-accordion__header">Sous-accordéon 1</h3>
+           <div class="js-accordion__panel">
+            <p>Stop arrêtez, trop cool.</p>
+           </div>
+           <h3 class="js-accordion__header">Sous-accordéon 2</h3>
+           <div class="js-accordion__panel">
+            <p><span tabindex="0">Encore plus cool.</span></p>
+           </div>
+        </div>
+
        </div>
-       
+
    </div>
-            
-  
-  
+
+
+
 <div class="footer" role="contentinfo"><br>Cette démo est un exemple d’<a href="https://van11y.net/fr/accordeon-accessible/" class="link">accordéon accessible du projet Van11y utilisant <abbr title="Accessible Rich Internet Applications" lang="en" xml:lang="en">ARIA</abbr></a>.<br></div>
 
 </div>

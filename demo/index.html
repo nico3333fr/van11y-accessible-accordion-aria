@@ -3,7 +3,7 @@
 <head>
  <meta charset="utf-8" />
  <title>Demo: Accessible Accordion System, using ARIA - Van11y</title>
- 
+
 <link href="./styles.css" rel="stylesheet" media="all" />
 
 
@@ -47,45 +47,58 @@
 
  <h1 class="aligncenter">Demo: Accessible accordion using <abbr title="Accessible Rich Internet Applications">ARIA</abbr> and Vanilla JavaScript</h1>
 
-  <div class="js-accordion" data-accordion-prefix-classes="minimalist">
- 
+  <div class="js-accordion" data-accordion-prefix-classes="minimalist" data-accordion-cool-selectors="1">
+
+    <div> <!-- this div is NOT necessary, just here to illustrate the use of data-accordion-cool-selectors="1" -->
        <h2 class="js-accordion__header">An accordion animated multi-selectable…</h2>
        <div class="js-accordion__panel">
-        
+
         <p>Yes, it rocks.</p>
-       
+
        </div>
-       
+
        <h2 class="js-accordion__header">… not opened by default</h2>
        <div class="js-accordion__panel">
-        
+
         <p><span tabindex="0">Yes, it rocks too.</span></p>
-       
+
        </div>
-       
+    </div>
+
    </div>
    <br><hr /><br>
   <div class="js-accordion" data-accordion-prefix-classes="minimalist-noanim" data-accordion-multiselectable="none">
- 
+
        <h2 class="js-accordion__header">Another accordion not animated…</h2>
        <div class="js-accordion__panel">
-        
+
         <p>Yes, it rocks.</p>
-       
+
        </div>
-       
-       
+
+
        <h2 class="js-accordion__header" data-accordion-opened="true">… and not multi-selectable</h2>
        <div class="js-accordion__panel">
-        
+
         <p>Yes, it rocks anyway.</p>
-       
+
+        <div class="js-accordion" data-accordion-prefix-classes="minimalist-css">
+                <h3 class="js-accordion__header">Sub-accordion 1</h3>
+                <div class="js-accordion__panel">
+                 <p>Stop please, too cool.</p>
+                </div>
+                <h3 class="js-accordion__header">Sub-accordion 2</h3>
+                <div class="js-accordion__panel">
+                 <p><span tabindex="0">Even cooler.</span></p>
+                </div>
+             </div>
+
        </div>
-       
+
    </div>
-            
-  
-  
+
+
+
 <div class="footer" role="contentinfo"><br>This demo is a demo of <a href="https://van11y.net/accessible-accordion/" class="link">Van11y accessible accordion using <abbr title="Accessible Rich Internet Applications">ARIA</abbr></a>.<br></div>
 
 </div>

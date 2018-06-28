@@ -13,7 +13,7 @@ La page existe aussi en français : https://van11y.net/fr/accordeon-accessible/
 ## How it works
 
 Basically it will transform this:
-```
+```html
 <div class="js-accordion" data-accordion-prefix-classes="your-prefix-class">
  <h2 class="js-accordion__header">First tab</h2>
  <div class="js-accordion__panel">
@@ -30,7 +30,7 @@ Basically it will transform this:
 </div>
 ```
 Into this:
-```
+```html
 <div class="your-prefix-class"
    data-accordion-prefix-classes="your-prefix-class"
    role="tablist" aria-multiselectable="true">
@@ -59,7 +59,9 @@ The script will do the rest (all ids, ARIA attributes, buttons are generated on 
 
 The script is launched when the page is loaded. If you need to execute it on AJAX-inserted content, you may use for example on ```<div id="newContent">your accordion source</div>```:
 
-```van11yAccessibleAccordionAria(document.getElementById('newContent'));```
+```van11yAccessibleAccordionAria(document.getElementById('newContent')[, addListeners]);```
+
+<code>addListeners</code> is a facultative boolean (by default set to <code>true</code>) to add accordion listeners (should be set up only the first time in most of the cases).
 
 
 ## How to use it
@@ -69,7 +71,7 @@ You may use npm command: ```npm i van11y-accessible-accordion-aria```.
 You may also use bower: ```bower install van11y-accessible-accordion-aria```.
 
 Then, follow the conventions given in this minimal example.
-```
+```html
 <div class="js-accordion" data-accordion-prefix-classes="your-prefix-class">
  <h2 class="js-accordion__header">First tab</h2>
  <div class="js-accordion__panel">
@@ -86,7 +88,7 @@ Then, follow the conventions given in this minimal example.
 </div>
 ```
 The minimal style needed is:
-```
+```css
 .your-prefix-class__panel[aria-hidden=true] {
   display: none;
 }
@@ -95,7 +97,7 @@ The minimal style needed is:
 ## How to style it (nicely)
 
 In this example page, I’ve used ```data-accordion-prefix-classes="minimalist-accordion"```, so all the generated classes will start with ```.minimalist-accordion``` (```.minimalist-accordion__header```, ```.minimalist-accordion__panel``` and ```.minimalist-accordion__title```).
-```
+```css
 .minimalist-accordion__panel[aria-hidden=true] {
   display: none;
 }
@@ -149,7 +151,7 @@ Warning: Ctrl+PageUp/PageDown combination could activate for some browsers a swi
 __Content opened by default__
 
 If you want to have an accordion content opened by default, just add the attribute data-accordion-opened="true" on a hx, example:
-```
+```html
 <h2 class="js-accordion__header" data-accordion-opened="true">
  Second tab
 </h2>
@@ -163,7 +165,7 @@ By default, the script supports nested accordions (since 2.1.0 version). To do t
 __Other options__
 
 The ARIA Design Pattern for accordions allows to have several accordion panels opened at the same time (which is shown by the attribute ```aria-multiselectable="true"```). However, you might need to avoid this for design purposes or client request. To do this, you may set this attribute on the accordion container: ```data-accordion-multiselectable="none"```. Example:
-```
+```html
 <div class="js-accordion" data-accordion-multiselectable="none" …>
 ```
 This option will set up ```aria-multiselectable="false"``` and the script will allow only one panel to be opened at the same time.

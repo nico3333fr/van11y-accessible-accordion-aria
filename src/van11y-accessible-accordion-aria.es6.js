@@ -145,8 +145,10 @@
     /**
      * Build accordions for a container
      * @param  {Node} node
+     * @param  {addListeners} boolean
      */
-    const attach = (node) => {
+    const attach = (node, addListeners = true) => {
+
         $listAccordions(node)
             .forEach((accordion_node) => {
 
@@ -228,215 +230,215 @@
 
             });
 
+        if (addListeners) {
+            /* listeners */
+            ['click', 'keydown', 'focus']
+            .forEach(eventName => {
+                //let isCtrl = false;
 
-    };
+                doc.body
+                    .addEventListener(eventName, e => {
 
-    /* listeners */
-    ['click', 'keydown', 'focus']
-    .forEach(eventName => {
-        //let isCtrl = false;
+                        // focus on button
+                        if (hasClass(e.target, ACCORDION_JS_HEADER) === true && eventName === 'focus') {
+                            let buttonTag = e.target;
+                            let accordionContainer = buttonTag.parentNode;
+                            let coolSelectors = accordionContainer.hasAttribute(ACCORDION_DATA_COOL_SELECTORS) === true ? true : false;
+                            let $accordionAllHeaders = [].slice.call(accordionContainer.querySelectorAll('.' + ACCORDION_JS_HEADER));
 
-        doc.body
-            .addEventListener(eventName, e => {
+                            if (coolSelectors === false) {
+                                $accordionAllHeaders = $accordionAllHeaders.filter(element => element.parentNode === accordionContainer);
+                            }
 
-                // focus on button
-                if (hasClass(e.target, ACCORDION_JS_HEADER) === true && eventName === 'focus') {
-                    let buttonTag = e.target;
-                    let accordionContainer = buttonTag.parentNode;
-                    let coolSelectors = accordionContainer.hasAttribute(ACCORDION_DATA_COOL_SELECTORS) === true ? true : false;
-                    let $accordionAllHeaders = [].slice.call(accordionContainer.querySelectorAll('.' + ACCORDION_JS_HEADER));
+                            unSelectHeaders($accordionAllHeaders);
 
-                    if (coolSelectors === false) {
-                        $accordionAllHeaders = $accordionAllHeaders.filter(element => element.parentNode === accordionContainer);
-                    }
+                            selectHeader(buttonTag);
 
-                    unSelectHeaders($accordionAllHeaders);
+                        }
 
-                    selectHeader(buttonTag);
+                        // click on button
+                        if (hasClass(e.target, ACCORDION_JS_HEADER) === true && eventName === 'click') {
+                            let buttonTag = e.target;
+                            let accordionContainer = buttonTag.parentNode;
+                            let coolSelectors = accordionContainer.hasAttribute(ACCORDION_DATA_COOL_SELECTORS) === true ? true : false;
+                            let $accordionAllHeaders = [].slice.call(accordionContainer.querySelectorAll('.' + ACCORDION_JS_HEADER));
+                            let accordionMultiSelectable = accordionContainer.getAttribute(ATTR_MULTISELECTABLE);
+                            let destination = findById(buttonTag.getAttribute(ATTR_CONTROLS));
+                            let stateButton = buttonTag.getAttribute(ATTR_EXPANDED);
 
-                }
+                            if (coolSelectors === false) {
+                                $accordionAllHeaders = $accordionAllHeaders.filter(element => element.parentNode === accordionContainer);
+                            }
 
-                // click on button
-                if (hasClass(e.target, ACCORDION_JS_HEADER) === true && eventName === 'click') {
-                    let buttonTag = e.target;
-                    let accordionContainer = buttonTag.parentNode;
-                    let coolSelectors = accordionContainer.hasAttribute(ACCORDION_DATA_COOL_SELECTORS) === true ? true : false;
-                    let $accordionAllHeaders = [].slice.call(accordionContainer.querySelectorAll('.' + ACCORDION_JS_HEADER));
-                    let accordionMultiSelectable = accordionContainer.getAttribute(ATTR_MULTISELECTABLE);
-                    let destination = findById(buttonTag.getAttribute(ATTR_CONTROLS));
-                    let stateButton = buttonTag.getAttribute(ATTR_EXPANDED);
+                            // if closed
+                            if (stateButton === 'false') {
+                                buttonTag.setAttribute(ATTR_EXPANDED, true);
+                                destination.removeAttribute(ATTR_HIDDEN);
+                            } else {
+                                buttonTag.setAttribute(ATTR_EXPANDED, false);
+                                destination.setAttribute(ATTR_HIDDEN, true);
+                            }
 
-                    if (coolSelectors === false) {
-                        $accordionAllHeaders = $accordionAllHeaders.filter(element => element.parentNode === accordionContainer);
-                    }
+                            if (accordionMultiSelectable === 'false') {
+                                $accordionAllHeaders
+                                    .forEach((header_node) => {
 
-                    // if closed
-                    if (stateButton === 'false') {
-                        buttonTag.setAttribute(ATTR_EXPANDED, true);
-                        destination.removeAttribute(ATTR_HIDDEN);
-                    } else {
-                        buttonTag.setAttribute(ATTR_EXPANDED, false);
-                        destination.setAttribute(ATTR_HIDDEN, true);
-                    }
+                                        let destinationPanel = findById(header_node.getAttribute(ATTR_CONTROLS));
 
-                    if (accordionMultiSelectable === 'false') {
-                        $accordionAllHeaders
-                            .forEach((header_node) => {
+                                        if (header_node !== buttonTag) {
+                                            header_node.setAttribute(ATTR_SELECTED, false);
+                                            header_node.setAttribute(ATTR_EXPANDED, false);
+                                            destinationPanel.setAttribute(ATTR_HIDDEN, true);
+                                        } else {
+                                            header_node.setAttribute(ATTR_SELECTED, true);
+                                        }
+                                    });
 
-                                let destinationPanel = findById(header_node.getAttribute(ATTR_CONTROLS));
+                            }
 
-                                if (header_node !== buttonTag) {
-                                    header_node.setAttribute(ATTR_SELECTED, false);
-                                    header_node.setAttribute(ATTR_EXPANDED, false);
-                                    destinationPanel.setAttribute(ATTR_HIDDEN, true);
+                            setTimeout(function() {
+                                buttonTag.focus();
+                            }, 0);
+                            e.preventDefault();
+
+                        }
+
+                        // keyboard management for headers
+                        if (hasClass(e.target, ACCORDION_JS_HEADER) === true && eventName === 'keydown') {
+                            let buttonTag = e.target;
+                            let accordionContainer = buttonTag.parentNode;
+                            let coolSelectors = accordionContainer.hasAttribute(ACCORDION_DATA_COOL_SELECTORS) === true ? true : false;
+                            let $accordionAllHeaders = [].slice.call(accordionContainer.querySelectorAll('.' + ACCORDION_JS_HEADER));
+
+                            if (coolSelectors === false) {
+                                $accordionAllHeaders = $accordionAllHeaders.filter(element => element.parentNode === accordionContainer);
+                            }
+
+                            // strike home on a tab => 1st tab
+                            if (e.keyCode === 36) {
+                                unSelectHeaders($accordionAllHeaders);
+                                selectHeader($accordionAllHeaders[0]);
+                                setTimeout(function() {
+                                    $accordionAllHeaders[0].focus();
+                                }, 0);
+                                e.preventDefault();
+                            }
+                            // strike end on the tab => last tab
+                            else if (e.keyCode === 35) {
+                                unSelectHeaders($accordionAllHeaders);
+                                selectHeader($accordionAllHeaders[$accordionAllHeaders.length - 1]);
+                                setTimeout(function() {
+                                    $accordionAllHeaders[$accordionAllHeaders.length - 1].focus();
+                                }, 0);
+                                e.preventDefault();
+                            }
+                            // strike up or left on the tab => previous tab
+                            else if ((e.keyCode === 37 || e.keyCode === 38) && !e.ctrlKey) {
+
+                                // if first selected = select last
+                                //if ( $accordionAllHeaders[ $accordionAllHeaders.length-1 ].getAttribute( ATTR_SELECTED ) === 'true' ) {
+                                if ($accordionAllHeaders[0].getAttribute(ATTR_SELECTED) === 'true') {
+                                    unSelectHeaders($accordionAllHeaders);
+                                    selectHeader($accordionAllHeaders[$accordionAllHeaders.length - 1]);
+                                    setTimeout(function() {
+                                        $accordionAllHeaders[$accordionAllHeaders.length - 1].focus();
+                                    }, 0);
+                                    e.preventDefault();
                                 } else {
-                                    header_node.setAttribute(ATTR_SELECTED, true);
+                                    selectHeaderInList($accordionAllHeaders, 'prev');
+                                    e.preventDefault();
                                 }
-                            });
 
-                    }
+                            }
+                            // strike down or right in the tab => next tab
+                            else if ((e.keyCode === 40 || e.keyCode === 39) && !e.ctrlKey) {
 
-                    setTimeout(function() {
-                        buttonTag.focus();
-                    }, 0);
-                    e.preventDefault();
+                                // if last selected = select first
+                                if ($accordionAllHeaders[$accordionAllHeaders.length - 1].getAttribute(ATTR_SELECTED) === 'true') {
+                                    unSelectHeaders($accordionAllHeaders);
+                                    selectHeader($accordionAllHeaders[0]);
+                                    setTimeout(function() {
+                                        $accordionAllHeaders[0].focus();
+                                    }, 0);
+                                    e.preventDefault();
+                                } else {
+                                    selectHeaderInList($accordionAllHeaders, 'next');
+                                    e.preventDefault();
+                                }
 
-                }
-
-                // keyboard management for headers
-                if (hasClass(e.target, ACCORDION_JS_HEADER) === true && eventName === 'keydown') {
-                    let buttonTag = e.target;
-                    let accordionContainer = buttonTag.parentNode;
-                    let coolSelectors = accordionContainer.hasAttribute(ACCORDION_DATA_COOL_SELECTORS) === true ? true : false;
-                    let $accordionAllHeaders = [].slice.call(accordionContainer.querySelectorAll('.' + ACCORDION_JS_HEADER));
-
-                    if (coolSelectors === false) {
-                        $accordionAllHeaders = $accordionAllHeaders.filter(element => element.parentNode === accordionContainer);
-                    }
-
-                    // strike home on a tab => 1st tab
-                    if (e.keyCode === 36) {
-                        unSelectHeaders($accordionAllHeaders);
-                        selectHeader($accordionAllHeaders[0]);
-                        setTimeout(function() {
-                            $accordionAllHeaders[0].focus();
-                        }, 0);
-                        e.preventDefault();
-                    }
-                    // strike end on the tab => last tab
-                    else if (e.keyCode === 35) {
-                        unSelectHeaders($accordionAllHeaders);
-                        selectHeader($accordionAllHeaders[$accordionAllHeaders.length - 1]);
-                        setTimeout(function() {
-                            $accordionAllHeaders[$accordionAllHeaders.length - 1].focus();
-                        }, 0);
-                        e.preventDefault();
-                    }
-                    // strike up or left on the tab => previous tab
-                    else if ((e.keyCode === 37 || e.keyCode === 38) && !e.ctrlKey) {
-
-                        // if first selected = select last
-                        //if ( $accordionAllHeaders[ $accordionAllHeaders.length-1 ].getAttribute( ATTR_SELECTED ) === 'true' ) {
-                        if ($accordionAllHeaders[0].getAttribute(ATTR_SELECTED) === 'true') {
-                            unSelectHeaders($accordionAllHeaders);
-                            selectHeader($accordionAllHeaders[$accordionAllHeaders.length - 1]);
-                            setTimeout(function() {
-                                $accordionAllHeaders[$accordionAllHeaders.length - 1].focus();
-                            }, 0);
-                            e.preventDefault();
-                        } else {
-                            selectHeaderInList($accordionAllHeaders, 'prev');
-                            e.preventDefault();
+                            }
                         }
 
-                    }
-                    // strike down or right in the tab => next tab
-                    else if ((e.keyCode === 40 || e.keyCode === 39) && !e.ctrlKey) {
 
-                        // if last selected = select first
-                        if ($accordionAllHeaders[$accordionAllHeaders.length - 1].getAttribute(ATTR_SELECTED) === 'true') {
-                            unSelectHeaders($accordionAllHeaders);
-                            selectHeader($accordionAllHeaders[0]);
-                            setTimeout(function() {
-                                $accordionAllHeaders[0].focus();
-                            }, 0);
-                            e.preventDefault();
-                        } else {
-                            selectHeaderInList($accordionAllHeaders, 'next');
-                            e.preventDefault();
+                        // keyboard management for panels
+                        let id_panel = searchParent(e.target, ACCORDION_JS_PANEL);
+                        if (id_panel !== '' && eventName === 'keydown') {
+
+                            let panelTag = findById(id_panel);
+                            let accordionContainer = panelTag.parentNode;
+                            let coolSelectors = accordionContainer.hasAttribute(ACCORDION_DATA_COOL_SELECTORS) === true ? true : false;
+                            let $accordionAllHeaders = [].slice.call(accordionContainer.querySelectorAll('.' + ACCORDION_JS_HEADER));
+                            let buttonTag = findById(panelTag.getAttribute(ATTR_LABELLEDBY));
+
+                            if (coolSelectors === false) {
+                                $accordionAllHeaders = $accordionAllHeaders.filter(element => element.parentNode === accordionContainer);
+                            }
+
+                            // strike up + ctrl => go to header
+                            if (e.keyCode === 38 && e.ctrlKey) {
+                                unSelectHeaders($accordionAllHeaders);
+                                selectHeader(buttonTag);
+                                setTimeout(function() {
+                                    buttonTag.focus();
+                                }, 0);
+                                e.preventDefault();
+                            }
+                            // strike pageup + ctrl => go to prev header
+                            if (e.keyCode === 33 && e.ctrlKey) {
+                                // go to header
+                                unSelectHeaders($accordionAllHeaders);
+                                selectHeader(buttonTag);
+                                buttonTag.focus();
+                                e.preventDefault();
+                                // then previous
+                                if ($accordionAllHeaders[0].getAttribute(ATTR_SELECTED) === 'true') {
+                                    unSelectHeaders($accordionAllHeaders);
+                                    selectHeader($accordionAllHeaders[$accordionAllHeaders.length - 1]);
+                                    setTimeout(function() {
+                                        $accordionAllHeaders[$accordionAllHeaders.length - 1].focus();
+                                    }, 0);
+                                } else {
+                                    selectHeaderInList($accordionAllHeaders, 'prev');
+                                }
+
+                            }
+                            // strike pagedown + ctrl => go to next header
+                            if (e.keyCode === 34 && e.ctrlKey) {
+                                // go to header
+                                unSelectHeaders($accordionAllHeaders);
+                                selectHeader(buttonTag);
+                                buttonTag.focus();
+                                e.preventDefault();
+                                // then next
+                                if ($accordionAllHeaders[$accordionAllHeaders.length - 1].getAttribute(ATTR_SELECTED) === 'true') {
+                                    unSelectHeaders($accordionAllHeaders);
+                                    selectHeader($accordionAllHeaders[0]);
+                                    setTimeout(function() {
+                                        $accordionAllHeaders[0].focus();
+                                    }, 0);
+                                } else {
+                                    selectHeaderInList($accordionAllHeaders, 'next');
+                                }
+
+                            }
+
+
                         }
 
-                    }
-                }
-
-
-                // keyboard management for panels
-                let id_panel = searchParent(e.target, ACCORDION_JS_PANEL);
-                if (id_panel !== '' && eventName === 'keydown') {
-
-                    let panelTag = findById(id_panel);
-                    let accordionContainer = panelTag.parentNode;
-                    let coolSelectors = accordionContainer.hasAttribute(ACCORDION_DATA_COOL_SELECTORS) === true ? true : false;
-                    let $accordionAllHeaders = [].slice.call(accordionContainer.querySelectorAll('.' + ACCORDION_JS_HEADER));
-                    let buttonTag = findById(panelTag.getAttribute(ATTR_LABELLEDBY));
-
-                    if (coolSelectors === false) {
-                        $accordionAllHeaders = $accordionAllHeaders.filter(element => element.parentNode === accordionContainer);
-                    }
-
-                    // strike up + ctrl => go to header
-                    if (e.keyCode === 38 && e.ctrlKey) {
-                        unSelectHeaders($accordionAllHeaders);
-                        selectHeader(buttonTag);
-                        setTimeout(function() {
-                            buttonTag.focus();
-                        }, 0);
-                        e.preventDefault();
-                    }
-                    // strike pageup + ctrl => go to prev header
-                    if (e.keyCode === 33 && e.ctrlKey) {
-                        // go to header
-                        unSelectHeaders($accordionAllHeaders);
-                        selectHeader(buttonTag);
-                        buttonTag.focus();
-                        e.preventDefault();
-                        // then previous
-                        if ($accordionAllHeaders[0].getAttribute(ATTR_SELECTED) === 'true') {
-                            unSelectHeaders($accordionAllHeaders);
-                            selectHeader($accordionAllHeaders[$accordionAllHeaders.length - 1]);
-                            setTimeout(function() {
-                                $accordionAllHeaders[$accordionAllHeaders.length - 1].focus();
-                            }, 0);
-                        } else {
-                            selectHeaderInList($accordionAllHeaders, 'prev');
-                        }
-
-                    }
-                    // strike pagedown + ctrl => go to next header
-                    if (e.keyCode === 34 && e.ctrlKey) {
-                        // go to header
-                        unSelectHeaders($accordionAllHeaders);
-                        selectHeader(buttonTag);
-                        buttonTag.focus();
-                        e.preventDefault();
-                        // then next
-                        if ($accordionAllHeaders[$accordionAllHeaders.length - 1].getAttribute(ATTR_SELECTED) === 'true') {
-                            unSelectHeaders($accordionAllHeaders);
-                            selectHeader($accordionAllHeaders[0]);
-                            setTimeout(function() {
-                                $accordionAllHeaders[0].focus();
-                            }, 0);
-                        } else {
-                            selectHeaderInList($accordionAllHeaders, 'next');
-                        }
-
-                    }
-
-
-                }
-
-            }, true);
-    });
+                    }, true);
+            });
+        }
+    };
 
     const onLoad = () => {
         attach();

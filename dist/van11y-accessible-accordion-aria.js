@@ -143,8 +143,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     /**
      * Build accordions for a container
      * @param  {Node} node
+     * @param  {addListeners} boolean
      */
     var attach = function attach(node) {
+        var addListeners = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
+
         $listAccordions(node).forEach(function (accordion_node) {
 
             var iLisible = Math.random().toString(32).slice(2, 12);
@@ -210,216 +213,218 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 }
             });
         });
-    };
 
-    /* listeners */
-    ['click', 'keydown', 'focus'].forEach(function (eventName) {
-        //let isCtrl = false;
+        if (addListeners) {
+            /* listeners */
+            ['click', 'keydown', 'focus'].forEach(function (eventName) {
+                //let isCtrl = false;
 
-        doc.body.addEventListener(eventName, function (e) {
+                doc.body.addEventListener(eventName, function (e) {
 
-            // focus on button
-            if (hasClass(e.target, ACCORDION_JS_HEADER) === true && eventName === 'focus') {
-                (function () {
-                    var buttonTag = e.target;
-                    var accordionContainer = buttonTag.parentNode;
-                    var coolSelectors = accordionContainer.hasAttribute(ACCORDION_DATA_COOL_SELECTORS) === true ? true : false;
-                    var $accordionAllHeaders = [].slice.call(accordionContainer.querySelectorAll('.' + ACCORDION_JS_HEADER));
+                    // focus on button
+                    if (hasClass(e.target, ACCORDION_JS_HEADER) === true && eventName === 'focus') {
+                        (function () {
+                            var buttonTag = e.target;
+                            var accordionContainer = buttonTag.parentNode;
+                            var coolSelectors = accordionContainer.hasAttribute(ACCORDION_DATA_COOL_SELECTORS) === true ? true : false;
+                            var $accordionAllHeaders = [].slice.call(accordionContainer.querySelectorAll('.' + ACCORDION_JS_HEADER));
 
-                    if (coolSelectors === false) {
-                        $accordionAllHeaders = $accordionAllHeaders.filter(function (element) {
-                            return element.parentNode === accordionContainer;
-                        });
-                    }
-
-                    unSelectHeaders($accordionAllHeaders);
-
-                    selectHeader(buttonTag);
-                })();
-            }
-
-            // click on button
-            if (hasClass(e.target, ACCORDION_JS_HEADER) === true && eventName === 'click') {
-                (function () {
-                    var buttonTag = e.target;
-                    var accordionContainer = buttonTag.parentNode;
-                    var coolSelectors = accordionContainer.hasAttribute(ACCORDION_DATA_COOL_SELECTORS) === true ? true : false;
-                    var $accordionAllHeaders = [].slice.call(accordionContainer.querySelectorAll('.' + ACCORDION_JS_HEADER));
-                    var accordionMultiSelectable = accordionContainer.getAttribute(ATTR_MULTISELECTABLE);
-                    var destination = findById(buttonTag.getAttribute(ATTR_CONTROLS));
-                    var stateButton = buttonTag.getAttribute(ATTR_EXPANDED);
-
-                    if (coolSelectors === false) {
-                        $accordionAllHeaders = $accordionAllHeaders.filter(function (element) {
-                            return element.parentNode === accordionContainer;
-                        });
-                    }
-
-                    // if closed
-                    if (stateButton === 'false') {
-                        buttonTag.setAttribute(ATTR_EXPANDED, true);
-                        destination.removeAttribute(ATTR_HIDDEN);
-                    } else {
-                        buttonTag.setAttribute(ATTR_EXPANDED, false);
-                        destination.setAttribute(ATTR_HIDDEN, true);
-                    }
-
-                    if (accordionMultiSelectable === 'false') {
-                        $accordionAllHeaders.forEach(function (header_node) {
-
-                            var destinationPanel = findById(header_node.getAttribute(ATTR_CONTROLS));
-
-                            if (header_node !== buttonTag) {
-                                header_node.setAttribute(ATTR_SELECTED, false);
-                                header_node.setAttribute(ATTR_EXPANDED, false);
-                                destinationPanel.setAttribute(ATTR_HIDDEN, true);
-                            } else {
-                                header_node.setAttribute(ATTR_SELECTED, true);
+                            if (coolSelectors === false) {
+                                $accordionAllHeaders = $accordionAllHeaders.filter(function (element) {
+                                    return element.parentNode === accordionContainer;
+                                });
                             }
-                        });
-                    }
 
-                    setTimeout(function () {
-                        buttonTag.focus();
-                    }, 0);
-                    e.preventDefault();
-                })();
-            }
-
-            // keyboard management for headers
-            if (hasClass(e.target, ACCORDION_JS_HEADER) === true && eventName === 'keydown') {
-                (function () {
-                    var buttonTag = e.target;
-                    var accordionContainer = buttonTag.parentNode;
-                    var coolSelectors = accordionContainer.hasAttribute(ACCORDION_DATA_COOL_SELECTORS) === true ? true : false;
-                    var $accordionAllHeaders = [].slice.call(accordionContainer.querySelectorAll('.' + ACCORDION_JS_HEADER));
-
-                    if (coolSelectors === false) {
-                        $accordionAllHeaders = $accordionAllHeaders.filter(function (element) {
-                            return element.parentNode === accordionContainer;
-                        });
-                    }
-
-                    // strike home on a tab => 1st tab
-                    if (e.keyCode === 36) {
-                        unSelectHeaders($accordionAllHeaders);
-                        selectHeader($accordionAllHeaders[0]);
-                        setTimeout(function () {
-                            $accordionAllHeaders[0].focus();
-                        }, 0);
-                        e.preventDefault();
-                    }
-                    // strike end on the tab => last tab
-                    else if (e.keyCode === 35) {
                             unSelectHeaders($accordionAllHeaders);
-                            selectHeader($accordionAllHeaders[$accordionAllHeaders.length - 1]);
+
+                            selectHeader(buttonTag);
+                        })();
+                    }
+
+                    // click on button
+                    if (hasClass(e.target, ACCORDION_JS_HEADER) === true && eventName === 'click') {
+                        (function () {
+                            var buttonTag = e.target;
+                            var accordionContainer = buttonTag.parentNode;
+                            var coolSelectors = accordionContainer.hasAttribute(ACCORDION_DATA_COOL_SELECTORS) === true ? true : false;
+                            var $accordionAllHeaders = [].slice.call(accordionContainer.querySelectorAll('.' + ACCORDION_JS_HEADER));
+                            var accordionMultiSelectable = accordionContainer.getAttribute(ATTR_MULTISELECTABLE);
+                            var destination = findById(buttonTag.getAttribute(ATTR_CONTROLS));
+                            var stateButton = buttonTag.getAttribute(ATTR_EXPANDED);
+
+                            if (coolSelectors === false) {
+                                $accordionAllHeaders = $accordionAllHeaders.filter(function (element) {
+                                    return element.parentNode === accordionContainer;
+                                });
+                            }
+
+                            // if closed
+                            if (stateButton === 'false') {
+                                buttonTag.setAttribute(ATTR_EXPANDED, true);
+                                destination.removeAttribute(ATTR_HIDDEN);
+                            } else {
+                                buttonTag.setAttribute(ATTR_EXPANDED, false);
+                                destination.setAttribute(ATTR_HIDDEN, true);
+                            }
+
+                            if (accordionMultiSelectable === 'false') {
+                                $accordionAllHeaders.forEach(function (header_node) {
+
+                                    var destinationPanel = findById(header_node.getAttribute(ATTR_CONTROLS));
+
+                                    if (header_node !== buttonTag) {
+                                        header_node.setAttribute(ATTR_SELECTED, false);
+                                        header_node.setAttribute(ATTR_EXPANDED, false);
+                                        destinationPanel.setAttribute(ATTR_HIDDEN, true);
+                                    } else {
+                                        header_node.setAttribute(ATTR_SELECTED, true);
+                                    }
+                                });
+                            }
+
                             setTimeout(function () {
-                                $accordionAllHeaders[$accordionAllHeaders.length - 1].focus();
+                                buttonTag.focus();
                             }, 0);
                             e.preventDefault();
-                        }
-                        // strike up or left on the tab => previous tab
-                        else if ((e.keyCode === 37 || e.keyCode === 38) && !e.ctrlKey) {
+                        })();
+                    }
 
-                                // if first selected = select last
-                                //if ( $accordionAllHeaders[ $accordionAllHeaders.length-1 ].getAttribute( ATTR_SELECTED ) === 'true' ) {
-                                if ($accordionAllHeaders[0].getAttribute(ATTR_SELECTED) === 'true') {
+                    // keyboard management for headers
+                    if (hasClass(e.target, ACCORDION_JS_HEADER) === true && eventName === 'keydown') {
+                        (function () {
+                            var buttonTag = e.target;
+                            var accordionContainer = buttonTag.parentNode;
+                            var coolSelectors = accordionContainer.hasAttribute(ACCORDION_DATA_COOL_SELECTORS) === true ? true : false;
+                            var $accordionAllHeaders = [].slice.call(accordionContainer.querySelectorAll('.' + ACCORDION_JS_HEADER));
+
+                            if (coolSelectors === false) {
+                                $accordionAllHeaders = $accordionAllHeaders.filter(function (element) {
+                                    return element.parentNode === accordionContainer;
+                                });
+                            }
+
+                            // strike home on a tab => 1st tab
+                            if (e.keyCode === 36) {
+                                unSelectHeaders($accordionAllHeaders);
+                                selectHeader($accordionAllHeaders[0]);
+                                setTimeout(function () {
+                                    $accordionAllHeaders[0].focus();
+                                }, 0);
+                                e.preventDefault();
+                            }
+                            // strike end on the tab => last tab
+                            else if (e.keyCode === 35) {
                                     unSelectHeaders($accordionAllHeaders);
                                     selectHeader($accordionAllHeaders[$accordionAllHeaders.length - 1]);
                                     setTimeout(function () {
                                         $accordionAllHeaders[$accordionAllHeaders.length - 1].focus();
                                     }, 0);
                                     e.preventDefault();
+                                }
+                                // strike up or left on the tab => previous tab
+                                else if ((e.keyCode === 37 || e.keyCode === 38) && !e.ctrlKey) {
+
+                                        // if first selected = select last
+                                        //if ( $accordionAllHeaders[ $accordionAllHeaders.length-1 ].getAttribute( ATTR_SELECTED ) === 'true' ) {
+                                        if ($accordionAllHeaders[0].getAttribute(ATTR_SELECTED) === 'true') {
+                                            unSelectHeaders($accordionAllHeaders);
+                                            selectHeader($accordionAllHeaders[$accordionAllHeaders.length - 1]);
+                                            setTimeout(function () {
+                                                $accordionAllHeaders[$accordionAllHeaders.length - 1].focus();
+                                            }, 0);
+                                            e.preventDefault();
+                                        } else {
+                                            selectHeaderInList($accordionAllHeaders, 'prev');
+                                            e.preventDefault();
+                                        }
+                                    }
+                                    // strike down or right in the tab => next tab
+                                    else if ((e.keyCode === 40 || e.keyCode === 39) && !e.ctrlKey) {
+
+                                            // if last selected = select first
+                                            if ($accordionAllHeaders[$accordionAllHeaders.length - 1].getAttribute(ATTR_SELECTED) === 'true') {
+                                                unSelectHeaders($accordionAllHeaders);
+                                                selectHeader($accordionAllHeaders[0]);
+                                                setTimeout(function () {
+                                                    $accordionAllHeaders[0].focus();
+                                                }, 0);
+                                                e.preventDefault();
+                                            } else {
+                                                selectHeaderInList($accordionAllHeaders, 'next');
+                                                e.preventDefault();
+                                            }
+                                        }
+                        })();
+                    }
+
+                    // keyboard management for panels
+                    var id_panel = searchParent(e.target, ACCORDION_JS_PANEL);
+                    if (id_panel !== '' && eventName === 'keydown') {
+                        (function () {
+
+                            var panelTag = findById(id_panel);
+                            var accordionContainer = panelTag.parentNode;
+                            var coolSelectors = accordionContainer.hasAttribute(ACCORDION_DATA_COOL_SELECTORS) === true ? true : false;
+                            var $accordionAllHeaders = [].slice.call(accordionContainer.querySelectorAll('.' + ACCORDION_JS_HEADER));
+                            var buttonTag = findById(panelTag.getAttribute(ATTR_LABELLEDBY));
+
+                            if (coolSelectors === false) {
+                                $accordionAllHeaders = $accordionAllHeaders.filter(function (element) {
+                                    return element.parentNode === accordionContainer;
+                                });
+                            }
+
+                            // strike up + ctrl => go to header
+                            if (e.keyCode === 38 && e.ctrlKey) {
+                                unSelectHeaders($accordionAllHeaders);
+                                selectHeader(buttonTag);
+                                setTimeout(function () {
+                                    buttonTag.focus();
+                                }, 0);
+                                e.preventDefault();
+                            }
+                            // strike pageup + ctrl => go to prev header
+                            if (e.keyCode === 33 && e.ctrlKey) {
+                                // go to header
+                                unSelectHeaders($accordionAllHeaders);
+                                selectHeader(buttonTag);
+                                buttonTag.focus();
+                                e.preventDefault();
+                                // then previous
+                                if ($accordionAllHeaders[0].getAttribute(ATTR_SELECTED) === 'true') {
+                                    unSelectHeaders($accordionAllHeaders);
+                                    selectHeader($accordionAllHeaders[$accordionAllHeaders.length - 1]);
+                                    setTimeout(function () {
+                                        $accordionAllHeaders[$accordionAllHeaders.length - 1].focus();
+                                    }, 0);
                                 } else {
                                     selectHeaderInList($accordionAllHeaders, 'prev');
-                                    e.preventDefault();
                                 }
                             }
-                            // strike down or right in the tab => next tab
-                            else if ((e.keyCode === 40 || e.keyCode === 39) && !e.ctrlKey) {
-
-                                    // if last selected = select first
-                                    if ($accordionAllHeaders[$accordionAllHeaders.length - 1].getAttribute(ATTR_SELECTED) === 'true') {
-                                        unSelectHeaders($accordionAllHeaders);
-                                        selectHeader($accordionAllHeaders[0]);
-                                        setTimeout(function () {
-                                            $accordionAllHeaders[0].focus();
-                                        }, 0);
-                                        e.preventDefault();
-                                    } else {
-                                        selectHeaderInList($accordionAllHeaders, 'next');
-                                        e.preventDefault();
-                                    }
+                            // strike pagedown + ctrl => go to next header
+                            if (e.keyCode === 34 && e.ctrlKey) {
+                                // go to header
+                                unSelectHeaders($accordionAllHeaders);
+                                selectHeader(buttonTag);
+                                buttonTag.focus();
+                                e.preventDefault();
+                                // then next
+                                if ($accordionAllHeaders[$accordionAllHeaders.length - 1].getAttribute(ATTR_SELECTED) === 'true') {
+                                    unSelectHeaders($accordionAllHeaders);
+                                    selectHeader($accordionAllHeaders[0]);
+                                    setTimeout(function () {
+                                        $accordionAllHeaders[0].focus();
+                                    }, 0);
+                                } else {
+                                    selectHeaderInList($accordionAllHeaders, 'next');
                                 }
-                })();
-            }
-
-            // keyboard management for panels
-            var id_panel = searchParent(e.target, ACCORDION_JS_PANEL);
-            if (id_panel !== '' && eventName === 'keydown') {
-                (function () {
-
-                    var panelTag = findById(id_panel);
-                    var accordionContainer = panelTag.parentNode;
-                    var coolSelectors = accordionContainer.hasAttribute(ACCORDION_DATA_COOL_SELECTORS) === true ? true : false;
-                    var $accordionAllHeaders = [].slice.call(accordionContainer.querySelectorAll('.' + ACCORDION_JS_HEADER));
-                    var buttonTag = findById(panelTag.getAttribute(ATTR_LABELLEDBY));
-
-                    if (coolSelectors === false) {
-                        $accordionAllHeaders = $accordionAllHeaders.filter(function (element) {
-                            return element.parentNode === accordionContainer;
-                        });
+                            }
+                        })();
                     }
-
-                    // strike up + ctrl => go to header
-                    if (e.keyCode === 38 && e.ctrlKey) {
-                        unSelectHeaders($accordionAllHeaders);
-                        selectHeader(buttonTag);
-                        setTimeout(function () {
-                            buttonTag.focus();
-                        }, 0);
-                        e.preventDefault();
-                    }
-                    // strike pageup + ctrl => go to prev header
-                    if (e.keyCode === 33 && e.ctrlKey) {
-                        // go to header
-                        unSelectHeaders($accordionAllHeaders);
-                        selectHeader(buttonTag);
-                        buttonTag.focus();
-                        e.preventDefault();
-                        // then previous
-                        if ($accordionAllHeaders[0].getAttribute(ATTR_SELECTED) === 'true') {
-                            unSelectHeaders($accordionAllHeaders);
-                            selectHeader($accordionAllHeaders[$accordionAllHeaders.length - 1]);
-                            setTimeout(function () {
-                                $accordionAllHeaders[$accordionAllHeaders.length - 1].focus();
-                            }, 0);
-                        } else {
-                            selectHeaderInList($accordionAllHeaders, 'prev');
-                        }
-                    }
-                    // strike pagedown + ctrl => go to next header
-                    if (e.keyCode === 34 && e.ctrlKey) {
-                        // go to header
-                        unSelectHeaders($accordionAllHeaders);
-                        selectHeader(buttonTag);
-                        buttonTag.focus();
-                        e.preventDefault();
-                        // then next
-                        if ($accordionAllHeaders[$accordionAllHeaders.length - 1].getAttribute(ATTR_SELECTED) === 'true') {
-                            unSelectHeaders($accordionAllHeaders);
-                            selectHeader($accordionAllHeaders[0]);
-                            setTimeout(function () {
-                                $accordionAllHeaders[0].focus();
-                            }, 0);
-                        } else {
-                            selectHeaderInList($accordionAllHeaders, 'next');
-                        }
-                    }
-                })();
-            }
-        }, true);
-    });
+                }, true);
+            });
+        }
+    };
 
     var onLoad = function onLoad() {
         attach();

@@ -80,15 +80,13 @@
         elts
             .forEach((header_node) => {
                 setAttributes(header_node, {
-                    [ATTR_SELECTED]: 'false',
-                    'tabindex': '-1'
+                    [ATTR_SELECTED]: 'false'
                 });
             });
     }
 
     const selectHeader = (el) => {
         el.setAttribute(ATTR_SELECTED, true);
-        el.removeAttribute('tabindex');
     }
 
     const selectHeaderInList = (elts, param) => {
@@ -190,7 +188,6 @@
                             'id': ACCORDION_PREFIX_IDS + iLisible + ACCORDION_BUTTON_ID + indexHeaderLisible,
                             [ATTR_CONTROLS]: ACCORDION_PREFIX_IDS + iLisible + ACCORDION_PANEL_ID + indexHeaderLisible,
                             [ATTR_SELECTED]: 'false',
-                            'tabindex': '-1',
                             'type': 'button'
                         });
 
@@ -220,10 +217,6 @@
                             accordionPanel.setAttribute(ATTR_HIDDEN, 'true');
                         }
 
-                        // init first one focusable
-                        if (indexHeaderLisible === 1) {
-                            accordionButton.removeAttribute('tabindex');
-                        }
 
                     });
 

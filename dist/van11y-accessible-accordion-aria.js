@@ -79,15 +79,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
     var unSelectHeaders = function unSelectHeaders(elts) {
         elts.forEach(function (header_node) {
-            var _setAttributes;
-
-            setAttributes(header_node, (_setAttributes = {}, _defineProperty(_setAttributes, ATTR_SELECTED, 'false'), _defineProperty(_setAttributes, 'tabindex', '-1'), _setAttributes));
+            setAttributes(header_node, _defineProperty({}, ATTR_SELECTED, 'false'));
         });
     };
 
     var selectHeader = function selectHeader(el) {
         el.setAttribute(ATTR_SELECTED, true);
-        el.removeAttribute('tabindex');
     };
 
     var selectHeaderInList = function selectHeaderInList(elts, param) {
@@ -183,7 +180,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 accordionButton.innerHTML = accordionHeaderText;
                 addClass(accordionButton, ACCORDION_JS_HEADER);
                 addClass(accordionButton, prefixClassName + ACCORDION_HEADER_STYLE);
-                setAttributes(accordionButton, (_setAttributes2 = {}, _defineProperty(_setAttributes2, ATTR_ROLE, ACCORDION_ROLE_TAB), _defineProperty(_setAttributes2, 'id', ACCORDION_PREFIX_IDS + iLisible + ACCORDION_BUTTON_ID + indexHeaderLisible), _defineProperty(_setAttributes2, ATTR_CONTROLS, ACCORDION_PREFIX_IDS + iLisible + ACCORDION_PANEL_ID + indexHeaderLisible), _defineProperty(_setAttributes2, ATTR_SELECTED, 'false'), _defineProperty(_setAttributes2, 'tabindex', '-1'), _defineProperty(_setAttributes2, 'type', 'button'), _setAttributes2));
+                setAttributes(accordionButton, (_setAttributes2 = {}, _defineProperty(_setAttributes2, ATTR_ROLE, ACCORDION_ROLE_TAB), _defineProperty(_setAttributes2, 'id', ACCORDION_PREFIX_IDS + iLisible + ACCORDION_BUTTON_ID + indexHeaderLisible), _defineProperty(_setAttributes2, ATTR_CONTROLS, ACCORDION_PREFIX_IDS + iLisible + ACCORDION_PANEL_ID + indexHeaderLisible), _defineProperty(_setAttributes2, ATTR_SELECTED, 'false'), _defineProperty(_setAttributes2, 'type', 'button'), _setAttributes2));
 
                 // place button
                 accordionButton = header_node.parentNode.insertBefore(accordionButton, header_node);
@@ -205,11 +202,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 } else {
                     accordionButton.setAttribute(ATTR_EXPANDED, 'false');
                     accordionPanel.setAttribute(ATTR_HIDDEN, 'true');
-                }
-
-                // init first one focusable
-                if (indexHeaderLisible === 1) {
-                    accordionButton.removeAttribute('tabindex');
                 }
             });
         });

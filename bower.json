@@ -3,7 +3,7 @@
   "description": "ES2015 accessible hide-show system (collapsible regions), using ARIA (compatible IE9+ when transpiled)",
   "homepage": "https://van11y.net/accessible-accordion/",
   "main": "van11y-accessible-accordion-aria.es6.js",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "keywords": [
     "Accessibility",
     "ARIA",

@@ -138,13 +138,6 @@ If you focus on the accordion “buttons”:
 
 And strike space or return on an accordion button to open/close it.
 
-If you focus on accordion content:
-
-- use Ctrl Up to set focus on the accordion button for the currently displayed accordion content
-- use Ctrl PageUp to set focus on the previous accordion button for the currently displayed accordion content
-- use Ctrl PageDown to set focus on the next accordion button for the currently displayed accordion content
-
-Warning: Ctrl+PageUp/PageDown combination could activate for some browsers a switch of browser tabs. Nothing to do for this, as far as I know (if you have a solution, let me know).
 
 ## Bonuses
 

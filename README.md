@@ -35,19 +35,20 @@ Into this:
    data-accordion-prefix-classes="your-prefix-class"
    role="tablist" aria-multiselectable="true">
 
- <button id="accordion1_tab1"
+ <h2 class="your-prefix-class-accordion__title">
+   <button id="accordion1_tab1"
      class="js-accordion__header your-prefix-class__header"
      aria-controls="accordion1_panel1" aria-expanded="false"
      role="tab" aria-selected="true" type="button">
        First tab
- </button>
+   </button>
+ </h2>
 
  <div id="accordion1_panel1"
      class="js-accordion__panel your-prefix-class__panel"
      aria-labelledby="accordion1_tab1"
      role="tabpanel" aria-hidden="true">
 
-   <h2 class="your-prefix-class__title" tabindex="0">First tab</h2>
    <p>Content of 1st tab</p>
 
  </div>

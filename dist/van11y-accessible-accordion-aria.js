@@ -158,6 +158,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 accordion_node.setAttribute(ATTR_MULTISELECTABLE, 'true');
             }
             accordion_node.setAttribute(ATTR_ROLE, ACCORDION_ROLE_TABLIST);
+            accordion_node.setAttribute('id', iLisible);
+
             addClass(accordion_node, prefixClassName + ACCORDION_STYLE);
 
             var $listAccordionsHeader = [].slice.call(accordion_node.querySelectorAll('.' + ACCORDION_JS_HEADER));
@@ -183,10 +185,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 setAttributes(accordionButton, (_setAttributes2 = {}, _defineProperty(_setAttributes2, ATTR_ROLE, ACCORDION_ROLE_TAB), _defineProperty(_setAttributes2, 'id', ACCORDION_PREFIX_IDS + iLisible + ACCORDION_BUTTON_ID + indexHeaderLisible), _defineProperty(_setAttributes2, ATTR_CONTROLS, ACCORDION_PREFIX_IDS + iLisible + ACCORDION_PANEL_ID + indexHeaderLisible), _defineProperty(_setAttributes2, ATTR_SELECTED, 'false'), _defineProperty(_setAttributes2, 'type', 'button'), _setAttributes2));
 
                 // place button
-                accordionButton = header_node.parentNode.insertBefore(accordionButton, header_node);
+                header_node.innerHTML = '';
+                header_node.appendChild(accordionButton);
 
                 // move title into panel
-                accordionPanel.insertBefore(header_node, accordionPanel.firstChild);
+                //accordionPanel.insertBefore(header_node, accordionPanel.firstChild);
                 // set title with attributes
                 addClass(header_node, prefixClassName + ACCORDION_TITLE_STYLE);
                 removeClass(header_node, ACCORDION_JS_HEADER);
@@ -217,13 +220,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                     if (hasClass(e.target, ACCORDION_JS_HEADER) === true && eventName === 'focus') {
                         (function () {
                             var buttonTag = e.target;
-                            var accordionContainer = buttonTag.parentNode;
+                            var accordionContainer = findById(searchParent(buttonTag, ACCORDION_JS));
                             var coolSelectors = accordionContainer.hasAttribute(ACCORDION_DATA_COOL_SELECTORS) === true ? true : false;
                             var $accordionAllHeaders = [].slice.call(accordionContainer.querySelectorAll('.' + ACCORDION_JS_HEADER));
 
                             if (coolSelectors === false) {
                                 $accordionAllHeaders = $accordionAllHeaders.filter(function (element) {
-                                    return element.parentNode === accordionContainer;
+                                    return element.parentNode.parentNode === accordionContainer;
                                 });
                             }
 
@@ -237,7 +240,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                     if (hasClass(e.target, ACCORDION_JS_HEADER) === true && eventName === 'click') {
                         (function () {
                             var buttonTag = e.target;
-                            var accordionContainer = buttonTag.parentNode;
+                            var accordionContainer = findById(searchParent(buttonTag, ACCORDION_JS));
                             var coolSelectors = accordionContainer.hasAttribute(ACCORDION_DATA_COOL_SELECTORS) === true ? true : false;
                             var $accordionAllHeaders = [].slice.call(accordionContainer.querySelectorAll('.' + ACCORDION_JS_HEADER));
                             var accordionMultiSelectable = accordionContainer.getAttribute(ATTR_MULTISELECTABLE);
@@ -246,7 +249,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
                             if (coolSelectors === false) {
                                 $accordionAllHeaders = $accordionAllHeaders.filter(function (element) {
-                                    return element.parentNode === accordionContainer;
+                                    return element.parentNode.parentNode === accordionContainer;
                                 });
                             }
 
@@ -285,13 +288,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                     if (hasClass(e.target, ACCORDION_JS_HEADER) === true && eventName === 'keydown') {
                         (function () {
                             var buttonTag = e.target;
-                            var accordionContainer = buttonTag.parentNode;
+                            var accordionContainer = findById(searchParent(buttonTag, ACCORDION_JS));
                             var coolSelectors = accordionContainer.hasAttribute(ACCORDION_DATA_COOL_SELECTORS) === true ? true : false;
                             var $accordionAllHeaders = [].slice.call(accordionContainer.querySelectorAll('.' + ACCORDION_JS_HEADER));
 
                             if (coolSelectors === false) {
                                 $accordionAllHeaders = $accordionAllHeaders.filter(function (element) {
-                                    return element.parentNode === accordionContainer;
+                                    return element.parentNode.parentNode === accordionContainer;
                                 });
                             }
 
@@ -317,7 +320,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                                 else if ((e.keyCode === 37 || e.keyCode === 38) && !e.ctrlKey) {
 
                                         // if first selected = select last
-                                        //if ( $accordionAllHeaders[ $accordionAllHeaders.length-1 ].getAttribute( ATTR_SELECTED ) === 'true' ) {
                                         if ($accordionAllHeaders[0].getAttribute(ATTR_SELECTED) === 'true') {
                                             unSelectHeaders($accordionAllHeaders);
                                             selectHeader($accordionAllHeaders[$accordionAllHeaders.length - 1]);

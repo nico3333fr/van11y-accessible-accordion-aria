@@ -164,7 +164,7 @@ html {
     /** fix typo inputs **/
     font-family: inherit;
     cursor: pointer;
-    font-size: 2em;
+    font-size: 1.5em;
     line-height: 1.8462;
     margin: 0;
     padding: .25em 0;
@@ -227,7 +227,7 @@ html {
     speak: none;
   }
 
-  .minimalist-accordion__title,
+  /*.minimalist-accordion__title,
   .minimalist-noanim-accordion__title,
   .minimalist-css-accordion__title {
     border: 0;
@@ -238,7 +238,7 @@ html {
     padding: 0;
     position: absolute;
     width: 1px;
-  }
+  }*/
 
   .minimalist-accordion__panel {
     display: block;

@@ -161,6 +161,8 @@
                     accordion_node.setAttribute(ATTR_MULTISELECTABLE, 'true');
                 }
                 accordion_node.setAttribute(ATTR_ROLE, ACCORDION_ROLE_TABLIST);
+                accordion_node.setAttribute('id', iLisible);
+
                 addClass(accordion_node, prefixClassName + ACCORDION_STYLE);
 
                 let $listAccordionsHeader = [].slice.call(accordion_node.querySelectorAll('.' + ACCORDION_JS_HEADER));
@@ -192,10 +194,11 @@
                         });
 
                         // place button
-                        accordionButton = header_node.parentNode.insertBefore(accordionButton, header_node);
+                        header_node.innerHTML = '';
+                        header_node.appendChild( accordionButton );
 
                         // move title into panel
-                        accordionPanel.insertBefore(header_node, accordionPanel.firstChild);
+                        //accordionPanel.insertBefore(header_node, accordionPanel.firstChild);
                         // set title with attributes
                         addClass(header_node, prefixClassName + ACCORDION_TITLE_STYLE);
                         removeClass(header_node, ACCORDION_JS_HEADER);
@@ -235,12 +238,12 @@
                         // focus on button
                         if (hasClass(e.target, ACCORDION_JS_HEADER) === true && eventName === 'focus') {
                             let buttonTag = e.target;
-                            let accordionContainer = buttonTag.parentNode;
+                            let accordionContainer = findById( searchParent(buttonTag, ACCORDION_JS) );
                             let coolSelectors = accordionContainer.hasAttribute(ACCORDION_DATA_COOL_SELECTORS) === true ? true : false;
                             let $accordionAllHeaders = [].slice.call(accordionContainer.querySelectorAll('.' + ACCORDION_JS_HEADER));
 
                             if (coolSelectors === false) {
-                                $accordionAllHeaders = $accordionAllHeaders.filter(element => element.parentNode === accordionContainer);
+                                $accordionAllHeaders = $accordionAllHeaders.filter(element => element.parentNode.parentNode === accordionContainer);
                             }
 
                             unSelectHeaders($accordionAllHeaders);
@@ -252,7 +255,7 @@
                         // click on button
                         if (hasClass(e.target, ACCORDION_JS_HEADER) === true && eventName === 'click') {
                             let buttonTag = e.target;
-                            let accordionContainer = buttonTag.parentNode;
+                            let accordionContainer = findById( searchParent(buttonTag, ACCORDION_JS) );
                             let coolSelectors = accordionContainer.hasAttribute(ACCORDION_DATA_COOL_SELECTORS) === true ? true : false;
                             let $accordionAllHeaders = [].slice.call(accordionContainer.querySelectorAll('.' + ACCORDION_JS_HEADER));
                             let accordionMultiSelectable = accordionContainer.getAttribute(ATTR_MULTISELECTABLE);
@@ -260,7 +263,7 @@
                             let stateButton = buttonTag.getAttribute(ATTR_EXPANDED);
 
                             if (coolSelectors === false) {
-                                $accordionAllHeaders = $accordionAllHeaders.filter(element => element.parentNode === accordionContainer);
+                                $accordionAllHeaders = $accordionAllHeaders.filter(element => element.parentNode.parentNode === accordionContainer);
                             }
 
                             // if closed
@@ -299,12 +302,12 @@
                         // keyboard management for headers
                         if (hasClass(e.target, ACCORDION_JS_HEADER) === true && eventName === 'keydown') {
                             let buttonTag = e.target;
-                            let accordionContainer = buttonTag.parentNode;
+                            let accordionContainer = findById( searchParent(buttonTag, ACCORDION_JS) );
                             let coolSelectors = accordionContainer.hasAttribute(ACCORDION_DATA_COOL_SELECTORS) === true ? true : false;
                             let $accordionAllHeaders = [].slice.call(accordionContainer.querySelectorAll('.' + ACCORDION_JS_HEADER));
 
                             if (coolSelectors === false) {
-                                $accordionAllHeaders = $accordionAllHeaders.filter(element => element.parentNode === accordionContainer);
+                                $accordionAllHeaders = $accordionAllHeaders.filter(element => element.parentNode.parentNode === accordionContainer);
                             }
 
                             // strike home on a tab => 1st tab
@@ -329,7 +332,6 @@
                             else if ((e.keyCode === 37 || e.keyCode === 38) && !e.ctrlKey) {
 
                                 // if first selected = select last
-                                //if ( $accordionAllHeaders[ $accordionAllHeaders.length-1 ].getAttribute( ATTR_SELECTED ) === 'true' ) {
                                 if ($accordionAllHeaders[0].getAttribute(ATTR_SELECTED) === 'true') {
                                     unSelectHeaders($accordionAllHeaders);
                                     selectHeader($accordionAllHeaders[$accordionAllHeaders.length - 1]);

@@ -5,137 +5,208 @@
  */
 'use strict';
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-(function (doc) {
+var loadConfig = function loadConfig() {
 
-    'use strict';
+    var CACHE = {};
 
-    var ACCORDION_JS = 'js-accordion';
-    var ACCORDION_JS_HEADER = 'js-accordion__header';
-    var ACCORDION_JS_PANEL = 'js-accordion__panel';
+    var set = function set(id, config) {
 
-    var ACCORDION_DATA_PREFIX_CLASS = 'data-accordion-prefix-classes';
-    var ACCORDION_DATA_OPENED = 'data-accordion-opened';
-    var ACCORDION_DATA_MULTISELECTABLE = 'data-accordion-multiselectable';
-    var ACCORDION_DATA_COOL_SELECTORS = 'data-accordion-cool-selectors';
-
-    var ACCORDION_PREFIX_IDS = 'accordion';
-    var ACCORDION_BUTTON_ID = '_tab';
-    var ACCORDION_PANEL_ID = '_panel';
-
-    var ACCORDION_STYLE = 'accordion';
-    var ACCORDION_TITLE_STYLE = 'accordion__title';
-    var ACCORDION_HEADER_STYLE = 'accordion__header';
-    var ACCORDION_PANEL_STYLE = 'accordion__panel';
-
-    var ACCORDION_ROLE_TABLIST = 'tablist';
-    var ACCORDION_ROLE_TAB = 'tab';
-    var ACCORDION_ROLE_TABPANEL = 'tabpanel';
-
-    var ATTR_ROLE = 'role';
-    var ATTR_MULTISELECTABLE = 'aria-multiselectable';
-    var ATTR_EXPANDED = 'aria-expanded';
-    var ATTR_LABELLEDBY = 'aria-labelledby';
-    var ATTR_HIDDEN = 'aria-hidden';
-    var ATTR_CONTROLS = 'aria-controls';
-    var ATTR_SELECTED = 'aria-selected';
-
-    //const IS_OPENED_CLASS = 'is-opened';
-
-    var findById = function findById(id) {
-        return doc.getElementById(id);
+        CACHE[id] = config;
+    };
+    var get = function get(id) {
+        return CACHE[id];
+    };
+    var remove = function remove(id) {
+        return CACHE[id];
     };
 
-    var addClass = function addClass(el, className) {
-        if (el.classList) {
-            el.classList.add(className); // IE 10+
-        } else {
-                el.className += ' ' + className; // IE 8+
-            }
+    return {
+        set: set,
+        get: get,
+        remove: remove
     };
+};
 
-    var removeClass = function removeClass(el, className) {
-        if (el.classList) {
-            el.classList.remove(className); // IE 10+
-        } else {
-                el.className = el.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' '); // IE 8+
-            }
-    };
+var DATA_HASH_ID = 'data-hashaccordion-id';
 
-    var hasClass = function hasClass(el, className) {
-        if (el.classList) {
-            return el.classList.contains(className); // IE 10+
-        } else {
-                return new RegExp('(^| )' + className + '( |$)', 'gi').test(el.className); // IE 8+ ?
-            }
-    };
+var pluginConfig = loadConfig();
 
-    var setAttributes = function setAttributes(node, attrs) {
-        Object.keys(attrs).forEach(function (attribute) {
-            node.setAttribute(attribute, attrs[attribute]);
-        });
-    };
+/** Find an element based on an Id
+ * @param  {String} id Id to find
+ * @param  {String} hash hash id (not mandatory)
+ * @return {Node} the element with the specified id
+ */
+var findById = function findById(id, hash) {
+    return document.querySelector('#' + id + '[' + DATA_HASH_ID + '="' + hash + '"]');
+};
 
-    var unSelectHeaders = function unSelectHeaders(elts) {
-        elts.forEach(function (header_node) {
-            setAttributes(header_node, _defineProperty({}, ATTR_SELECTED, 'false'));
-        });
-    };
-
-    var selectHeader = function selectHeader(el) {
-        el.setAttribute(ATTR_SELECTED, true);
-    };
-
-    var selectHeaderInList = function selectHeaderInList(elts, param) {
-        var indice_trouve = undefined;
-        elts.forEach(function (header_node, index) {
-
-            if (header_node.getAttribute(ATTR_SELECTED) === 'true') {
-                indice_trouve = index;
-            }
-        });
-        if (param === 'next') {
-            selectHeader(elts[indice_trouve + 1]);
-            setTimeout(function () {
-                elts[indice_trouve + 1].focus();
-            }, 0);
+/** add a class to a node
+ * @param  {Node} el node to attach class
+ * @param  {String} className the class to add
+ */
+var addClass = function addClass(el, className) {
+    if (el.classList) {
+        el.classList.add(className); // IE 10+
+    } else {
+            el.className += ' ' + className; // IE 8+
         }
-        if (param === 'prev') {
-            selectHeader(elts[indice_trouve - 1]);
-            setTimeout(function () {
-                elts[indice_trouve - 1].focus();
-            }, 0);
-        }
-    };
+};
 
-    /* gets an element el, search if it is child of parent class, returns id of the parent */
-    var searchParent = function searchParent(el, parentClass) {
-        var found = false;
-        var parentElement = el.parentNode;
-        while (parentElement && found === false) {
-            if (hasClass(parentElement, parentClass) === true) {
-                found = true;
-            } else {
-                parentElement = parentElement.parentNode;
-            }
+/** remove class from node
+ * @param  {Node} el node to remove class
+ * @param  {String} className the class to remove
+ */
+var removeClass = function removeClass(el, className) {
+    if (el.classList) {
+        el.classList.remove(className); // IE 10+
+    } else {
+            el.className = el.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' '); // IE 8+
         }
-        if (found === true) {
-            return parentElement.getAttribute('id');
+};
+
+/** check if node has specified class
+ * @param  {Node} el node to check
+ * @param  {String} className the class
+ */
+var hasClass = function hasClass(el, className) {
+    if (el.classList) {
+        return el.classList.contains(className); // IE 10+
+    } else {
+            return new RegExp('(^| )' + className + '( |$)', 'gi').test(el.className); // IE 8+ ?
+        }
+};
+
+var setAttributes = function setAttributes(node, attrs) {
+    Object.keys(attrs).forEach(function (attribute) {
+        node.setAttribute(attribute, attrs[attribute]);
+    });
+};
+
+/** search if element is or is contained in another element with attribute data-hashaccordion-id
+ * @param  {Node} el element (node)
+ * @param  {String} hashId the attribute data-hashtooltip-id
+ * @return {String} the value of attribute data-hashtooltip-id
+ */
+var searchParentHashId = function searchParentHashId(el, hashId) {
+    var found = false;
+
+    var parentElement = el;
+    while (parentElement.nodeType === 1 && parentElement && found === false) {
+
+        if (parentElement.hasAttribute(hashId) === true) {
+            found = true;
         } else {
-            return '';
+            parentElement = parentElement.parentNode;
         }
-    };
+    }
+    if (found === true) {
+        return parentElement.getAttribute(hashId);
+    } else {
+        return '';
+    }
+};
+var searchParent = function searchParent(el, parentClass, hashId) {
+    var found = false;
 
+    var parentElement = el;
+    while (parentElement && found === false) {
+        if (hasClass(parentElement, parentClass) === true && parentElement.getAttribute(DATA_HASH_ID) === hashId) {
+            found = true;
+        } else {
+            parentElement = parentElement.parentNode;
+        }
+    }
+    if (found === true) {
+        return parentElement.getAttribute('id');
+    } else {
+        return '';
+    }
+};
+
+var unSelectHeaders = function unSelectHeaders(elts, attrSelected) {
+    elts.forEach(function (header_node) {
+        setAttributes(header_node, _defineProperty({}, attrSelected, 'false'));
+    });
+};
+
+var selectHeader = function selectHeader(el, attrSelected) {
+    el.setAttribute(attrSelected, true);
+};
+
+var selectHeaderInList = function selectHeaderInList(elts, param, attrSelected) {
+    var indice_trouve = undefined;
+    elts.forEach(function (header_node, index) {
+
+        if (header_node.getAttribute(attrSelected) === 'true') {
+            indice_trouve = index;
+        }
+    });
+
+    if (param === 'next') {
+        selectHeader(elts[indice_trouve + 1]);
+        setTimeout(function () {
+            elts[indice_trouve + 1].focus();
+        }, 0);
+    }
+    if (param === 'prev') {
+        selectHeader(elts[indice_trouve - 1]);
+        setTimeout(function () {
+            elts[indice_trouve - 1].focus();
+        }, 0);
+    }
+};
+
+var plugin = function plugin() {
+    var config = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+    var CONFIG = _extends({
+        ACCORDION_JS: 'js-accordion',
+        ACCORDION_JS_HEADER: 'js-accordion__header',
+        ACCORDION_JS_PANEL: 'js-accordion__panel',
+
+        ACCORDION_DATA_PREFIX_CLASS: 'data-accordion-prefix-classes',
+        ACCORDION_DATA_OPENED: 'data-accordion-opened',
+        ACCORDION_DATA_MULTISELECTABLE: 'data-accordion-multiselectable',
+        ACCORDION_DATA_COOL_SELECTORS: 'data-accordion-cool-selectors',
+
+        ACCORDION_PREFIX_IDS: 'accordion',
+        ACCORDION_BUTTON_ID: '_tab',
+        ACCORDION_PANEL_ID: '_panel',
+
+        ACCORDION_STYLE: 'accordion',
+        ACCORDION_TITLE_STYLE: 'accordion__title',
+        ACCORDION_HEADER_STYLE: 'accordion__header',
+        ACCORDION_PANEL_STYLE: 'accordion__panel',
+
+        ACCORDION_ROLE_TABLIST: 'tablist',
+        ACCORDION_ROLE_TAB: 'tab',
+        ACCORDION_ROLE_TABPANEL: 'tabpanel',
+
+        ATTR_ROLE: 'role',
+        ATTR_MULTISELECTABLE: 'aria-multiselectable',
+        ATTR_EXPANDED: 'aria-expanded',
+        ATTR_LABELLEDBY: 'aria-labelledby',
+        ATTR_HIDDEN: 'aria-hidden',
+        ATTR_CONTROLS: 'aria-controls',
+        ATTR_SELECTED: 'aria-selected'
+    }, config);
+
+    var HASH_ID = Math.random().toString(32).slice(2, 12);
+
+    pluginConfig.set(HASH_ID, CONFIG);
     /**
      * Find all accordions inside a container
      * @param  {Node} node Default document
      * @return {Array}
      */
     var $listAccordions = function $listAccordions() {
-        var node = arguments.length <= 0 || arguments[0] === undefined ? doc : arguments[0];
-        return [].slice.call(node.querySelectorAll('.' + ACCORDION_JS));
-    };
+        var node = arguments.length <= 0 || arguments[0] === undefined ? document : arguments[0];
+        return [].slice.call(node.querySelectorAll('.' + CONFIG.ACCORDION_JS));
+    }; //[...node.querySelectorAll('.' + CONFIG.ACCORDION_JS)]; // that does not work on IE when transpiled :-(
 
     /**
      * Build accordions for a container
@@ -143,26 +214,26 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
      * @param  {addListeners} boolean
      */
     var attach = function attach(node) {
-        var addListeners = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
 
         $listAccordions(node).forEach(function (accordion_node) {
 
             var iLisible = Math.random().toString(32).slice(2, 12);
-            var prefixClassName = accordion_node.hasAttribute(ACCORDION_DATA_PREFIX_CLASS) === true ? accordion_node.getAttribute(ACCORDION_DATA_PREFIX_CLASS) + '-' : '';
-            var coolSelectors = accordion_node.hasAttribute(ACCORDION_DATA_COOL_SELECTORS) === true ? true : false;
+            var prefixClassName = accordion_node.hasAttribute(CONFIG.ACCORDION_DATA_PREFIX_CLASS) === true ? accordion_node.getAttribute(CONFIG.ACCORDION_DATA_PREFIX_CLASS) + '-' : '';
+            var coolSelectors = accordion_node.hasAttribute(CONFIG.ACCORDION_DATA_COOL_SELECTORS) === true ? true : false;
 
             // Init attributes accordion
-            if (accordion_node.getAttribute(ACCORDION_DATA_MULTISELECTABLE) === 'none') {
-                accordion_node.setAttribute(ATTR_MULTISELECTABLE, 'false');
+            if (accordion_node.getAttribute(CONFIG.ACCORDION_DATA_MULTISELECTABLE) === 'none') {
+                accordion_node.setAttribute(CONFIG.ATTR_MULTISELECTABLE, 'false');
             } else {
-                accordion_node.setAttribute(ATTR_MULTISELECTABLE, 'true');
+                accordion_node.setAttribute(CONFIG.ATTR_MULTISELECTABLE, 'true');
             }
-            accordion_node.setAttribute(ATTR_ROLE, ACCORDION_ROLE_TABLIST);
+            accordion_node.setAttribute(CONFIG.ATTR_ROLE, CONFIG.ACCORDION_ROLE_TABLIST);
             accordion_node.setAttribute('id', iLisible);
+            accordion_node.setAttribute(DATA_HASH_ID, HASH_ID);
 
-            addClass(accordion_node, prefixClassName + ACCORDION_STYLE);
+            addClass(accordion_node, prefixClassName + CONFIG.ACCORDION_STYLE);
 
-            var $listAccordionsHeader = [].slice.call(accordion_node.querySelectorAll('.' + ACCORDION_JS_HEADER));
+            var $listAccordionsHeader = [].slice.call(accordion_node.querySelectorAll('.' + CONFIG.ACCORDION_JS_HEADER));
             $listAccordionsHeader.forEach(function (header_node, index_header) {
                 var _setAttributes2, _setAttributes3;
 
@@ -176,13 +247,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 var accordionPanel = header_node.nextElementSibling;
                 var accordionHeaderText = header_node.innerHTML;
                 var accordionButton = document.createElement("BUTTON");
-                var accordionOpenedAttribute = header_node.hasAttribute(ACCORDION_DATA_OPENED) === true ? header_node.getAttribute(ACCORDION_DATA_OPENED) : '';
+                var accordionOpenedAttribute = header_node.hasAttribute(CONFIG.ACCORDION_DATA_OPENED) === true ? header_node.getAttribute(CONFIG.ACCORDION_DATA_OPENED) : '';
 
                 // set button with attributes
                 accordionButton.innerHTML = accordionHeaderText;
-                addClass(accordionButton, ACCORDION_JS_HEADER);
-                addClass(accordionButton, prefixClassName + ACCORDION_HEADER_STYLE);
-                setAttributes(accordionButton, (_setAttributes2 = {}, _defineProperty(_setAttributes2, ATTR_ROLE, ACCORDION_ROLE_TAB), _defineProperty(_setAttributes2, 'id', ACCORDION_PREFIX_IDS + iLisible + ACCORDION_BUTTON_ID + indexHeaderLisible), _defineProperty(_setAttributes2, ATTR_CONTROLS, ACCORDION_PREFIX_IDS + iLisible + ACCORDION_PANEL_ID + indexHeaderLisible), _defineProperty(_setAttributes2, ATTR_SELECTED, 'false'), _defineProperty(_setAttributes2, 'type', 'button'), _setAttributes2));
+                addClass(accordionButton, CONFIG.ACCORDION_JS_HEADER);
+                addClass(accordionButton, prefixClassName + CONFIG.ACCORDION_HEADER_STYLE);
+                setAttributes(accordionButton, (_setAttributes2 = {}, _defineProperty(_setAttributes2, CONFIG.ATTR_ROLE, CONFIG.ACCORDION_ROLE_TAB), _defineProperty(_setAttributes2, 'id', CONFIG.ACCORDION_PREFIX_IDS + iLisible + CONFIG.ACCORDION_BUTTON_ID + indexHeaderLisible), _defineProperty(_setAttributes2, CONFIG.ATTR_CONTROLS, CONFIG.ACCORDION_PREFIX_IDS + iLisible + CONFIG.ACCORDION_PANEL_ID + indexHeaderLisible), _defineProperty(_setAttributes2, CONFIG.ATTR_SELECTED, 'false'), _defineProperty(_setAttributes2, 'type', 'button'), _defineProperty(_setAttributes2, DATA_HASH_ID, HASH_ID), _setAttributes2));
 
                 // place button
                 header_node.innerHTML = '';
@@ -191,38 +262,55 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 // move title into panel
                 //accordionPanel.insertBefore(header_node, accordionPanel.firstChild);
                 // set title with attributes
-                addClass(header_node, prefixClassName + ACCORDION_TITLE_STYLE);
-                removeClass(header_node, ACCORDION_JS_HEADER);
+                addClass(header_node, prefixClassName + CONFIG.ACCORDION_TITLE_STYLE);
+                removeClass(header_node, CONFIG.ACCORDION_JS_HEADER);
 
                 // set attributes to panels
-                addClass(accordionPanel, prefixClassName + ACCORDION_PANEL_STYLE);
-                setAttributes(accordionPanel, (_setAttributes3 = {}, _defineProperty(_setAttributes3, ATTR_ROLE, ACCORDION_ROLE_TABPANEL), _defineProperty(_setAttributes3, ATTR_LABELLEDBY, ACCORDION_PREFIX_IDS + iLisible + ACCORDION_BUTTON_ID + indexHeaderLisible), _defineProperty(_setAttributes3, 'id', ACCORDION_PREFIX_IDS + iLisible + ACCORDION_PANEL_ID + indexHeaderLisible), _setAttributes3));
+                addClass(accordionPanel, prefixClassName + CONFIG.ACCORDION_PANEL_STYLE);
+                setAttributes(accordionPanel, (_setAttributes3 = {}, _defineProperty(_setAttributes3, CONFIG.ATTR_ROLE, CONFIG.ACCORDION_ROLE_TABPANEL), _defineProperty(_setAttributes3, CONFIG.ATTR_LABELLEDBY, CONFIG.ACCORDION_PREFIX_IDS + iLisible + CONFIG.ACCORDION_BUTTON_ID + indexHeaderLisible), _defineProperty(_setAttributes3, 'id', CONFIG.ACCORDION_PREFIX_IDS + iLisible + CONFIG.ACCORDION_PANEL_ID + indexHeaderLisible), _defineProperty(_setAttributes3, DATA_HASH_ID, HASH_ID), _setAttributes3));
 
                 if (accordionOpenedAttribute === 'true') {
-                    accordionButton.setAttribute(ATTR_EXPANDED, 'true');
-                    header_node.removeAttribute(ACCORDION_DATA_OPENED);
-                    accordionPanel.setAttribute(ATTR_HIDDEN, 'false');
+                    accordionButton.setAttribute(CONFIG.ATTR_EXPANDED, 'true');
+                    header_node.removeAttribute(CONFIG.ACCORDION_DATA_OPENED);
+                    accordionPanel.setAttribute(CONFIG.ATTR_HIDDEN, 'false');
                 } else {
-                    accordionButton.setAttribute(ATTR_EXPANDED, 'false');
-                    accordionPanel.setAttribute(ATTR_HIDDEN, 'true');
+                    accordionButton.setAttribute(CONFIG.ATTR_EXPANDED, 'false');
+                    accordionPanel.setAttribute(CONFIG.ATTR_HIDDEN, 'true');
                 }
             });
         });
+    };
 
-        if (addListeners) {
-            /* listeners */
-            ['click', 'keydown', 'focus'].forEach(function (eventName) {
-                //let isCtrl = false;
+    return {
+        attach: attach
+        /*,
+                destroy*/
+    };
+};
 
-                doc.body.addEventListener(eventName, function (e) {
+var main = function main() {
+
+    /* listeners for all configs */
+    ['click', 'keydown', 'focus'].forEach(function (eventName) {
+
+        document.body.addEventListener(eventName, function (e) {
+
+            var hashId = searchParentHashId(e.target, DATA_HASH_ID); //e.target.dataset.hashId;
+            // search if click on button or on element in a button contains data-hash-id (it is needed to load config and know which class to search)
+
+            if (hashId !== '') {
+                (function () {
+
+                    // loading config from element
+                    var CONFIG = pluginConfig.get(hashId);
 
                     // focus on button
-                    if (hasClass(e.target, ACCORDION_JS_HEADER) === true && eventName === 'focus') {
+                    if (hasClass(e.target, CONFIG.ACCORDION_JS_HEADER) === true && eventName === 'focus') {
                         (function () {
                             var buttonTag = e.target;
-                            var accordionContainer = findById(searchParent(buttonTag, ACCORDION_JS));
-                            var coolSelectors = accordionContainer.hasAttribute(ACCORDION_DATA_COOL_SELECTORS) === true ? true : false;
-                            var $accordionAllHeaders = [].slice.call(accordionContainer.querySelectorAll('.' + ACCORDION_JS_HEADER));
+                            var accordionContainer = findById(searchParent(buttonTag, CONFIG.ACCORDION_JS, hashId), hashId);
+                            var coolSelectors = accordionContainer.hasAttribute(CONFIG.ACCORDION_DATA_COOL_SELECTORS) === true ? true : false;
+                            var $accordionAllHeaders = [].slice.call(accordionContainer.querySelectorAll('.' + CONFIG.ACCORDION_JS_HEADER));
 
                             if (coolSelectors === false) {
                                 $accordionAllHeaders = $accordionAllHeaders.filter(function (element) {
@@ -230,22 +318,22 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                                 });
                             }
 
-                            unSelectHeaders($accordionAllHeaders);
+                            unSelectHeaders($accordionAllHeaders, CONFIG.ATTR_SELECTED);
 
-                            selectHeader(buttonTag);
+                            selectHeader(buttonTag, CONFIG.ATTR_SELECTED);
                         })();
                     }
 
                     // click on button
-                    if (hasClass(e.target, ACCORDION_JS_HEADER) === true && eventName === 'click') {
+                    if (hasClass(e.target, CONFIG.ACCORDION_JS_HEADER) === true && eventName === 'click') {
                         (function () {
                             var buttonTag = e.target;
-                            var accordionContainer = findById(searchParent(buttonTag, ACCORDION_JS));
-                            var coolSelectors = accordionContainer.hasAttribute(ACCORDION_DATA_COOL_SELECTORS) === true ? true : false;
-                            var $accordionAllHeaders = [].slice.call(accordionContainer.querySelectorAll('.' + ACCORDION_JS_HEADER));
-                            var accordionMultiSelectable = accordionContainer.getAttribute(ATTR_MULTISELECTABLE);
-                            var destination = findById(buttonTag.getAttribute(ATTR_CONTROLS));
-                            var stateButton = buttonTag.getAttribute(ATTR_EXPANDED);
+                            var accordionContainer = findById(searchParent(buttonTag, CONFIG.ACCORDION_JS, hashId), hashId);
+                            var coolSelectors = accordionContainer.hasAttribute(CONFIG.ACCORDION_DATA_COOL_SELECTORS) === true ? true : false;
+                            var $accordionAllHeaders = [].slice.call(accordionContainer.querySelectorAll('.' + CONFIG.ACCORDION_JS_HEADER));
+                            var accordionMultiSelectable = accordionContainer.getAttribute(CONFIG.ATTR_MULTISELECTABLE);
+                            var destination = findById(buttonTag.getAttribute(CONFIG.ATTR_CONTROLS), hashId);
+                            var stateButton = buttonTag.getAttribute(CONFIG.ATTR_EXPANDED);
 
                             if (coolSelectors === false) {
                                 $accordionAllHeaders = $accordionAllHeaders.filter(function (element) {
@@ -255,24 +343,24 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
                             // if closed
                             if (stateButton === 'false') {
-                                buttonTag.setAttribute(ATTR_EXPANDED, true);
-                                destination.removeAttribute(ATTR_HIDDEN);
+                                buttonTag.setAttribute(CONFIG.ATTR_EXPANDED, true);
+                                destination.removeAttribute(CONFIG.ATTR_HIDDEN);
                             } else {
-                                buttonTag.setAttribute(ATTR_EXPANDED, false);
-                                destination.setAttribute(ATTR_HIDDEN, true);
+                                buttonTag.setAttribute(CONFIG.ATTR_EXPANDED, false);
+                                destination.setAttribute(CONFIG.ATTR_HIDDEN, true);
                             }
 
                             if (accordionMultiSelectable === 'false') {
                                 $accordionAllHeaders.forEach(function (header_node) {
 
-                                    var destinationPanel = findById(header_node.getAttribute(ATTR_CONTROLS));
+                                    var destinationPanel = findById(header_node.getAttribute(CONFIG.ATTR_CONTROLS), hashId);
 
                                     if (header_node !== buttonTag) {
-                                        header_node.setAttribute(ATTR_SELECTED, false);
-                                        header_node.setAttribute(ATTR_EXPANDED, false);
-                                        destinationPanel.setAttribute(ATTR_HIDDEN, true);
+                                        header_node.setAttribute(CONFIG.ATTR_SELECTED, false);
+                                        header_node.setAttribute(CONFIG.ATTR_EXPANDED, false);
+                                        destinationPanel.setAttribute(CONFIG.ATTR_HIDDEN, true);
                                     } else {
-                                        header_node.setAttribute(ATTR_SELECTED, true);
+                                        header_node.setAttribute(CONFIG.ATTR_SELECTED, true);
                                     }
                                 });
                             }
@@ -285,12 +373,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                     }
 
                     // keyboard management for headers
-                    if (hasClass(e.target, ACCORDION_JS_HEADER) === true && eventName === 'keydown') {
+                    if (hasClass(e.target, CONFIG.ACCORDION_JS_HEADER) === true && eventName === 'keydown') {
                         (function () {
                             var buttonTag = e.target;
-                            var accordionContainer = findById(searchParent(buttonTag, ACCORDION_JS));
-                            var coolSelectors = accordionContainer.hasAttribute(ACCORDION_DATA_COOL_SELECTORS) === true ? true : false;
-                            var $accordionAllHeaders = [].slice.call(accordionContainer.querySelectorAll('.' + ACCORDION_JS_HEADER));
+                            var idAccordionContainer = searchParent(buttonTag, CONFIG.ACCORDION_JS, hashId);
+                            var accordionContainer = findById(idAccordionContainer, hashId);
+
+                            var coolSelectors = accordionContainer.hasAttribute(CONFIG.ACCORDION_DATA_COOL_SELECTORS) === true ? true : false;
+                            var $accordionAllHeaders = [].slice.call(accordionContainer.querySelectorAll('.' + CONFIG.ACCORDION_JS_HEADER));
 
                             if (coolSelectors === false) {
                                 $accordionAllHeaders = $accordionAllHeaders.filter(function (element) {
@@ -300,8 +390,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
                             // strike home on a tab => 1st tab
                             if (e.keyCode === 36) {
-                                unSelectHeaders($accordionAllHeaders);
-                                selectHeader($accordionAllHeaders[0]);
+                                unSelectHeaders($accordionAllHeaders, CONFIG.ATTR_SELECTED);
+                                selectHeader($accordionAllHeaders[0], CONFIG.ATTR_SELECTED);
                                 setTimeout(function () {
                                     $accordionAllHeaders[0].focus();
                                 }, 0);
@@ -309,8 +399,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                             }
                             // strike end on the tab => last tab
                             else if (e.keyCode === 35) {
-                                    unSelectHeaders($accordionAllHeaders);
-                                    selectHeader($accordionAllHeaders[$accordionAllHeaders.length - 1]);
+                                    unSelectHeaders($accordionAllHeaders, CONFIG.ATTR_SELECTED);
+                                    selectHeader($accordionAllHeaders[$accordionAllHeaders.length - 1], CONFIG.ATTR_SELECTED);
                                     setTimeout(function () {
                                         $accordionAllHeaders[$accordionAllHeaders.length - 1].focus();
                                     }, 0);
@@ -320,15 +410,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                                 else if ((e.keyCode === 37 || e.keyCode === 38) && !e.ctrlKey) {
 
                                         // if first selected = select last
-                                        if ($accordionAllHeaders[0].getAttribute(ATTR_SELECTED) === 'true') {
-                                            unSelectHeaders($accordionAllHeaders);
-                                            selectHeader($accordionAllHeaders[$accordionAllHeaders.length - 1]);
+                                        if ($accordionAllHeaders[0].getAttribute(CONFIG.ATTR_SELECTED) === 'true') {
+                                            unSelectHeaders($accordionAllHeaders, CONFIG.ATTR_SELECTED);
+                                            selectHeader($accordionAllHeaders[$accordionAllHeaders.length - 1], CONFIG.ATTR_SELECTED);
                                             setTimeout(function () {
                                                 $accordionAllHeaders[$accordionAllHeaders.length - 1].focus();
                                             }, 0);
                                             e.preventDefault();
                                         } else {
-                                            selectHeaderInList($accordionAllHeaders, 'prev');
+                                            selectHeaderInList($accordionAllHeaders, 'prev', CONFIG.ATTR_SELECTED);
                                             e.preventDefault();
                                         }
                                     }
@@ -336,31 +426,35 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                                     else if ((e.keyCode === 40 || e.keyCode === 39) && !e.ctrlKey) {
 
                                             // if last selected = select first
-                                            if ($accordionAllHeaders[$accordionAllHeaders.length - 1].getAttribute(ATTR_SELECTED) === 'true') {
-                                                unSelectHeaders($accordionAllHeaders);
-                                                selectHeader($accordionAllHeaders[0]);
+                                            if ($accordionAllHeaders[$accordionAllHeaders.length - 1].getAttribute(CONFIG.ATTR_SELECTED) === 'true') {
+                                                unSelectHeaders($accordionAllHeaders, CONFIG.ATTR_SELECTED);
+                                                selectHeader($accordionAllHeaders[0], CONFIG.ATTR_SELECTED);
                                                 setTimeout(function () {
                                                     $accordionAllHeaders[0].focus();
                                                 }, 0);
                                                 e.preventDefault();
                                             } else {
-                                                selectHeaderInList($accordionAllHeaders, 'next');
+                                                selectHeaderInList($accordionAllHeaders, 'next', CONFIG.ATTR_SELECTED);
                                                 e.preventDefault();
                                             }
                                         }
                         })();
                     }
-                }, true);
-            });
-        }
-    };
+                })();
+            }
+        }, true);
+    });
 
-    var onLoad = function onLoad() {
-        attach();
-        document.removeEventListener('DOMContentLoaded', onLoad);
-    };
+    return plugin;
+};
 
-    document.addEventListener('DOMContentLoaded', onLoad);
+window.van11yAccessibleAccordionAria = main();
 
-    window.van11yAccessibleAccordionAria = attach;
-})(document);
+var onLoad = function onLoad() {
+    var expand_default = window.van11yAccessibleAccordionAria();
+    expand_default.attach();
+
+    document.removeEventListener('DOMContentLoaded', onLoad);
+};
+
+document.addEventListener('DOMContentLoaded', onLoad);

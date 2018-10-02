@@ -60,9 +60,11 @@ The script will do the rest (all ids, ARIA attributes, buttons are generated on 
 
 The script is launched when the page is loaded. If you need to execute it on AJAX-inserted content, you may use for example on ```<div id="newContent">your accordion source</div>```:
 
-```van11yAccessibleAccordionAria(document.getElementById('newContent')[, addListeners]);```
+```js
+var my_accordion = van11yAccessibleAccordionAria();
+my_accordion.attach(document.getElementById('newContent'));
+```
 
-<code>addListeners</code> is a facultative boolean (by default set to <code>true</code>) to add accordion listeners (should be set up only the first time in most of the cases).
 
 
 ## How to use it
@@ -155,6 +157,53 @@ And the script will open its content.
 __Nested accordions and cooler selectors__
 
 By default, the script supports nested accordions (since 2.1.0 version). To do this, the script is going to search for direct children of `js-accordion`. However, it is possible to activate a less strict mode if your site requires some `div` between `js-accordion` and `js-accordion__header`, this can be achieved using `data-accordion-cool-selectors="1"` attribute, to put onto `js-accordion` element. [The first demo illustrates this feature](https://van11y.net/downloads/accordion/demo/index.html).
+
+__Default config__
+
+```js
+const CONFIG = {
+    ACCORDION_JS: 'js-accordion',
+    ACCORDION_JS_HEADER: 'js-accordion__header',
+    ACCORDION_JS_PANEL: 'js-accordion__panel',
+
+    ACCORDION_DATA_PREFIX_CLASS: 'data-accordion-prefix-classes',
+    ACCORDION_DATA_OPENED: 'data-accordion-opened',
+    ACCORDION_DATA_MULTISELECTABLE: 'data-accordion-multiselectable',
+    ACCORDION_DATA_COOL_SELECTORS: 'data-accordion-cool-selectors',
+
+    ACCORDION_PREFIX_IDS: 'accordion',
+    ACCORDION_BUTTON_ID: '_tab',
+    ACCORDION_PANEL_ID: '_panel',
+
+    ACCORDION_STYLE: 'accordion',
+    ACCORDION_TITLE_STYLE: 'accordion__title',
+    ACCORDION_HEADER_STYLE: 'accordion__header',
+    ACCORDION_PANEL_STYLE: 'accordion__panel',
+
+    ACCORDION_ROLE_TABLIST: 'tablist',
+    ACCORDION_ROLE_TAB: 'tab',
+    ACCORDION_ROLE_TABPANEL: 'tabpanel',
+
+    ATTR_ROLE: 'role',
+    ATTR_MULTISELECTABLE: 'aria-multiselectable',
+    ATTR_EXPANDED: 'aria-expanded',
+    ATTR_LABELLEDBY: 'aria-labelledby',
+    ATTR_HIDDEN: 'aria-hidden',
+    ATTR_CONTROLS: 'aria-controls',
+    ATTR_SELECTED: 'aria-selected',
+    ...config
+};
+```
+
+If you need to use another configuration, you may call the plugin like this:
+
+```js
+var other_accordion = van11yAccessibleAccordionAria({
+    ACCORDION_PREFIX_IDS: 'peekaboo_',
+    ACCORDION_JS: 'js-accordion2'
+});
+other_accordion.attach();
+```
 
 __Other options__
 

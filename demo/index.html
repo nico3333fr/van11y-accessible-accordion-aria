@@ -67,12 +67,12 @@
 
    </div>
    <br><hr /><br>
-  <div class="js-accordion" data-accordion-prefix-classes="minimalist-noanim" data-accordion-multiselectable="none">
+  <div class="js-accordion2" data-accordion-prefix-classes="minimalist-noanim" data-accordion-multiselectable="none">
 
        <h2 class="js-accordion__header">Another accordion not animated…</h2>
        <div class="js-accordion__panel">
 
-        <p>Yes, it rocks.</p>
+        <p>Yes, it rocks, called with a different configuration.</p>
 
        </div>
 
@@ -103,5 +103,12 @@
 
 </div>
 <script src="../dist/van11y-accessible-accordion-aria.min.js"></script>
+<script>
+var other_accordion = van11yAccessibleAccordionAria({
+    ACCORDION_PREFIX_IDS: 'peekaboo_',
+    ACCORDION_JS: 'js-accordion2'
+});
+other_accordion.attach();
+</script>
 </body>
 </html>

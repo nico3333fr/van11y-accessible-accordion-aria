@@ -215,7 +215,7 @@ const plugin = (config = {}) => {
         $listAccordions(node)
             .forEach((accordion_node) => {
 
-                let iLisible = Math.random().toString(32).slice(2, 12);
+                let iLisible = 'z' + Math.random().toString(32).slice(2, 12); // avoid selector exception when starting by a number
                 let prefixClassName = accordion_node.hasAttribute(CONFIG.ACCORDION_DATA_PREFIX_CLASS) === true ? accordion_node.getAttribute(CONFIG.ACCORDION_DATA_PREFIX_CLASS) + '-' : '';
                 let coolSelectors = accordion_node.hasAttribute(CONFIG.ACCORDION_DATA_COOL_SELECTORS) === true ? true : false;
 
